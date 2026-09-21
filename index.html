@@ -1,2 +1,986 @@
-<h1>Hello Goodwall</h1>
-<b1>My name is Akshat</b1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>The 19th Trader | Trade With Character</title>
+
+  <meta
+    name="description"
+    content="The 19th Trader - Premium stock market education, portfolio guidance, investment insights, and trading community."
+  />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    :root {
+      --black: #070707;
+      --black-soft: #101010;
+      --panel: #151515;
+      --panel-light: #1c1c1c;
+      --gold: #d6ad60;
+      --gold-light: #f1d28d;
+      --cream: #f8f3e7;
+      --muted: #a8a398;
+      --green: #8ad7a4;
+      --red: #e88484;
+      --border: rgba(214, 173, 96, 0.2);
+      --shadow: 0 25px 70px rgba(0, 0, 0, 0.55);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background:
+        radial-gradient(circle at 10% 5%, rgba(214, 173, 96, 0.1), transparent 28rem),
+        radial-gradient(circle at 90% 20%, rgba(214, 173, 96, 0.07), transparent 25rem),
+        var(--black);
+      color: var(--cream);
+      font-family: "DM Sans", sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.035;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E");
+      z-index: 10;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button {
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .container {
+      width: min(1180px, calc(100% - 36px));
+      margin: 0 auto;
+    }
+
+    .gold {
+      color: var(--gold-light);
+    }
+
+    .eyebrow {
+      color: var(--gold-light);
+      font-size: 0.76rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 20;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(7, 7, 7, 0.78);
+      backdrop-filter: blur(18px);
+    }
+
+    .nav {
+      min-height: 78px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: "Playfair Display", serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .logo-mark {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold-light);
+      font-family: "Playfair Display", serif;
+      font-size: 1.15rem;
+      box-shadow: 0 0 24px rgba(214, 173, 96, 0.15);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    .nav-links a {
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--gold-light);
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      padding: 13px 19px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px);
+    }
+
+    .button-gold {
+      color: #17120a;
+      background: linear-gradient(135deg, var(--gold-light), var(--gold));
+      box-shadow: 0 10px 26px rgba(214, 173, 96, 0.2);
+    }
+
+    .button-outline {
+      border: 1px solid var(--border);
+      color: var(--cream);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .hero {
+      min-height: 800px;
+      padding: 190px 0 90px;
+      position: relative;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      align-items: center;
+      gap: 70px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Playfair Display", serif;
+      font-weight: 700;
+      line-height: 1.08;
+    }
+
+    h1 {
+      max-width: 730px;
+      margin: 22px 0;
+      font-size: clamp(3.3rem, 7vw, 6.8rem);
+      letter-spacing: -0.07em;
+    }
+
+    .hero-copy {
+      max-width: 570px;
+      color: var(--muted);
+      font-size: 1.08rem;
+    }
+
+    .hero-copy strong {
+      color: var(--cream);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 13px;
+      margin-top: 32px;
+    }
+
+    .hero-note {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 25px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .pulse {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 6px rgba(138, 215, 164, 0.1);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      50% {
+        box-shadow: 0 0 0 12px rgba(138, 215, 164, 0);
+      }
+    }
+
+    .trading-terminal {
+      position: relative;
+      min-height: 470px;
+      padding: 21px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background: linear-gradient(145deg, #1b1a17, #0e0e0e);
+      box-shadow: var(--shadow);
+      transform: rotate(1.5deg);
+    }
+
+    .terminal-glow {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      right: -80px;
+      top: -80px;
+      border-radius: 50%;
+      background: rgba(214, 173, 96, 0.12);
+      filter: blur(45px);
+      pointer-events: none;
+    }
+
+    .terminal-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dots span {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .chart-area {
+      position: relative;
+      height: 215px;
+      margin: 24px 0;
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .chart-line {
+      position: absolute;
+      left: -4%;
+      bottom: 20px;
+      width: 110%;
+      height: 80%;
+      fill: none;
+      stroke: var(--gold-light);
+      stroke-width: 2.5;
+      filter: drop-shadow(0 0 8px rgba(241, 210, 141, 0.5));
+      animation: chartMove 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes chartMove {
+      from {
+        transform: translateY(4px);
+      }
+      to {
+        transform: translateY(-5px);
+      }
+    }
+
+    .terminal-stat {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 13px;
+    }
+
+    .stat {
+      padding: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .stat span {
+      display: block;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .stat strong {
+      display: block;
+      margin-top: 5px;
+      color: var(--gold-light);
+      font-size: 1.25rem;
+    }
+
+    .terminal-joke {
+      margin-top: 16px;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-align: center;
+    }
+
+    .ticker-wrapper {
+      overflow: hidden;
+      border-top: 1px solid rgba(255, 255, 255, 0.07);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+      background: rgba(255, 255, 255, 0.025);
+    }
+
+    .ticker {
+      display: flex;
+      width: max-content;
+      gap: 55px;
+      padding: 15px 0;
+      animation: ticker 28s linear infinite;
+      color: var(--muted);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .ticker b {
+      color: var(--gold-light);
+    }
+
+    .up {
+      color: var(--green);
+    }
+
+    .down {
+      color: var(--red);
+    }
+
+    @keyframes ticker {
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    section {
+      padding: 105px 0;
+    }
+
+    .section-heading {
+      max-width: 700px;
+      margin-bottom: 42px;
+    }
+
+    .section-heading h2 {
+      margin: 14px 0;
+      font-size: clamp(2.3rem, 5vw, 4.2rem);
+      letter-spacing: -0.06em;
+    }
+
+    .section-heading p {
+      color: var(--muted);
+    }
+
+    .services {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 17px;
+    }
+
+    .service-card {
+      min-height: 245px;
+      padding: 27px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      background: linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.015));
+      transition: border-color 0.25s ease, transform 0.25s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--border);
+    }
+
+    .service-card::after {
+      content: "";
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      right: -60px;
+      bottom: -60px;
+      border-radius: 50%;
+      background: rgba(214, 173, 96, 0.1);
+      filter: blur(5px);
+    }
+
+    .service-icon {
+      font-size: 1.8rem;
+      margin-bottom: 22px;
+    }
+
+    .service-card h3 {
+      margin-bottom: 12px;
+      font-size: 1.35rem;
+    }
+
+    .service-card p {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .quiz-section {
+      background: linear-gradient(135deg, rgba(214, 173, 96, 0.08), transparent 60%);
+    }
+
+    .quiz-box {
+      max-width: 760px;
+      padding: 38px;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .quiz-box h3 {
+      margin: 11px 0;
+      font-size: 2rem;
+    }
+
+    .quiz-box p {
+      color: var(--muted);
+    }
+
+    .quiz-options {
+      display: grid;
+      gap: 11px;
+      margin-top: 25px;
+    }
+
+    .quiz-option {
+      padding: 16px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.025);
+      color: var(--cream);
+      text-align: left;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--gold);
+      color: var(--gold-light);
+      transform: translateX(4px);
+    }
+
+    #quizResult {
+      display: none;
+      margin-top: 22px;
+      padding: 17px;
+      border-left: 3px solid var(--gold);
+      background: rgba(214, 173, 96, 0.08);
+      color: var(--cream);
+    }
+
+    .community {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 18px;
+    }
+
+    .community-card {
+      padding: 27px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 22px;
+      background: var(--panel);
+    }
+
+    .community-card h3 {
+      margin: 14px 0 8px;
+      font-size: 1.35rem;
+    }
+
+    .community-card p {
+      min-height: 52px;
+      color: var(--muted);
+      font-size: 0.91rem;
+    }
+
+    .community-card .button {
+      margin-top: 18px;
+      width: 100%;
+    }
+
+    .contact {
+      padding-bottom: 45px;
+    }
+
+    .contact-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 30px;
+      padding: 48px;
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      background:
+        linear-gradient(110deg, rgba(214, 173, 96, 0.13), transparent 60%),
+        var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    .contact-box h2 {
+      max-width: 680px;
+      margin: 12px 0;
+      font-size: clamp(2rem, 4vw, 3.7rem);
+      letter-spacing: -0.06em;
+    }
+
+    .contact-box p {
+      max-width: 620px;
+      color: var(--muted);
+    }
+
+    .contact-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 11px;
+    }
+
+    footer {
+      padding: 38px 0 45px;
+      color: var(--muted);
+      font-size: 0.78rem;
+      text-align: center;
+    }
+
+    .disclaimer {
+      max-width: 800px;
+      margin: 12px auto 0;
+      color: #817d75;
+      font-size: 0.72rem;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 50px;
+      }
+
+      .trading-terminal {
+        max-width: 650px;
+        width: 100%;
+        margin: auto;
+      }
+
+      .services,
+      .community {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .contact-box {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .nav-links,
+      header .button {
+        display: none;
+      }
+
+      .hero {
+        padding-top: 145px;
+      }
+
+      h1 {
+        font-size: 3.5rem;
+      }
+
+      .services,
+      .community {
+        grid-template-columns: 1fr;
+      }
+
+      .quiz-box,
+      .contact-box {
+        padding: 26px;
+      }
+
+      .trading-terminal {
+        transform: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <div class="container nav">
+      <a href="#" class="logo">
+        <span class="logo-mark">19</span>
+        <span>The 19th Trader</span>
+      </a>
+
+      <nav class="nav-links">
+        <a href="#services">Services</a>
+        <a href="#quiz">Your Style</a>
+        <a href="#community">Community</a>
+      </nav>
+
+      <a class="button button-gold" href="#contact">Talk Markets</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">The private club for curious traders</div>
+
+          <h1>
+            Make better moves.
+            <span class="gold">Keep your eyebrows.</span>
+          </h1>
+
+          <p class="hero-copy">
+            Welcome to <strong>The 19th Trader</strong> — a trading community for
+            market education, stock insights, investment guidance, portfolio support,
+            and the occasional reminder that revenge trading is not a personality trait.
+          </p>
+
+          <div class="hero-actions">
+            <a class="button button-gold" href="#contact">
+              Join the Conversation →
+            </a>
+
+            <a class="button button-outline" href="#quiz">
+              Find My Trader Type
+            </a>
+          </div>
+
+          <div class="hero-note">
+            <span class="pulse"></span>
+            Market open. Coffee mandatory. Panic optional.
+          </div>
+        </div>
+
+        <div class="trading-terminal">
+          <div class="terminal-glow"></div>
+
+          <div class="terminal-top">
+            <div class="dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <span>19TH TRADER / LIVE DESK</span>
+            <span>09:19 AM</span>
+          </div>
+
+          <div class="chart-area">
+            <svg class="chart-line" viewBox="0 0 700 220" preserveAspectRatio="none">
+              <polyline
+                points="0,180 45,165 80,174 120,130 160,145 205,90 240,115 280,83 320,104 365,62 405,80 450,45 490,74 530,34 570,60 620,20 700,39"
+              />
+            </svg>
+          </div>
+
+          <div class="terminal-stat">
+            <div class="stat">
+              <span>Today's mood</span>
+              <strong>Calm-ish</strong>
+            </div>
+
+            <div class="stat">
+              <span>FOMO level</span>
+              <strong>Under review</strong>
+            </div>
+
+            <div class="stat">
+              <span>Risk control</span>
+              <strong>Non-negotiable</strong>
+            </div>
+
+            <div class="stat">
+              <span>Excuses accepted</span>
+              <strong>Zero</strong>
+            </div>
+          </div>
+
+          <div class="terminal-joke">
+            *Past performance does not guarantee future profits.
+            Memes do not guarantee anything either.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="ticker-wrapper">
+      <div class="ticker">
+        <span>DISCIPLINE <b>↑ 100%</b></span>
+        <span>FOMO <b class="down">↓ 42%</b></span>
+        <span>LEARNING <b>↑ 87%</b></span>
+        <span>RANDOM TIPS FROM YOUR COUSIN <b class="down">↓ 99%</b></span>
+        <span>DISCIPLINE <b>↑ 100%</b></span>
+        <span>FOMO <b class="down">↓ 42%</b></span>
+        <span>LEARNING <b>↑ 87%</b></span>
+        <span>RANDOM TIPS FROM YOUR COUSIN <b class="down">↓ 99%</b></span>
+      </div>
+    </div>
+
+    <section id="services">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">What we do</div>
+          <h2>Serious about markets. Not serious about boring websites.</h2>
+          <p>
+            Explore focused support designed to help you understand the market,
+            improve your process, and make more informed decisions.
+          </p>
+        </div>
+
+        <div class="services">
+          <article class="service-card">
+            <div class="service-icon">◈</div>
+            <h3>Stock Insights</h3>
+            <p>
+              Market observations and stock-related guidance to help you think
+              beyond random “buy this bro” messages.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">◉</div>
+            <h3>Investment Guidance</h3>
+            <p>
+              Build a more structured approach to investments based on your goals,
+              time horizon, and risk comfort.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">◇</div>
+            <h3>Portfolio Support</h3>
+            <p>
+              Review your portfolio strategy, understand concentration, and avoid
+              collecting stocks like they are Pokémon.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">△</div>
+            <h3>Account Handling</h3>
+            <p>
+              Contact us to discuss available account-handling services and the
+              process that may be suitable for you.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">✦</div>
+            <h3>Market Education</h3>
+            <p>
+              Learn trading and investing concepts in a practical, understandable,
+              and slightly less sleepy way.
+            </p>
+          </article>
+
+          <article class="service-card">
+            <div class="service-icon">∞</div>
+            <h3>Trading Mindset</h3>
+            <p>
+              Develop patience, discipline, and the rare ability to not check your
+              portfolio every 14 seconds.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="quiz" class="quiz-section">
+      <div class="container">
+        <div class="quiz-box">
+          <div class="eyebrow">Two-click personality test</div>
+          <h3>What kind of trader are you?</h3>
+          <p>Choose honestly. The market already knows.</p>
+
+          <div class="quiz-options">
+            <button class="quiz-option" onclick="showResult('You are The Strategist 🧠 — patient, planned, and suspicious of hype.')">
+              I read, research, and then read some more.
+            </button>
+
+            <button class="quiz-option" onclick="showResult('You are The Opportunist ⚡ — quick to spot ideas, but remember that speed is not a strategy.')">
+              I see an opportunity before breakfast.
+            </button>
+
+            <button class="quiz-option" onclick="showResult('You are The Investor 🌱 — focused on the long game and allergic to unnecessary drama.')">
+              I prefer patience over panic.
+            </button>
+
+            <button class="quiz-option" onclick="showResult('You are The Recovering FOMO Trader 🚑 — welcome. Step one is admitting you bought because someone shouted rocket emojis.')">
+              I have made at least one decision because of FOMO.
+            </button>
+          </div>
+
+          <div id="quizResult"></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="community">
+      <div class="container">
+        <div class="section-heading">
+          <div class="eyebrow">Stay connected</div>
+          <h2>Your next market conversation is one click away.</h2>
+          <p>
+            Follow The 19th Trader and connect with the community across Instagram,
+            Telegram, and WhatsApp.
+          </p>
+        </div>
+
+        <div class="community">
+          <article class="community-card">
+            <div class="service-icon">◎</div>
+            <h3>Instagram</h3>
+            <p>
+              Follow <strong>@the_19th_trader</strong> for updates, market content,
+              and educational posts.
+            </p>
+            <a
+              class="button button-outline"
+              href="https://instagram.com/the_19th_trader"
+              target="_blank"
+              rel="noopener"
+            >
+              Follow on Instagram
+            </a>
+          </article>
+
+          <article class="community-card">
+            <div class="service-icon">✈</div>
+            <h3>Telegram</h3>
+            <p>
+              Open Telegram and search for <strong>The 19th Trader</strong> to find
+              the community.
+            </p>
+            <a
+              class="button button-outline"
+              href="https://t.me/"
+              target="_blank"
+              rel="noopener"
+            >
+             >WhatsApp</h3>
+            <p>
+              Contact us directly for services, questions, and further information.
+            </p>
+            <a
+              class="button button-gold"
+              href="https://wa.me/917683058560?text=Hello%20The%2019th%20Trader%2C%20I%20would%20like%20to%20know%20more."
+              target="_blank"
+              rel="noopener"
+            >
+              Message on WhatsApp
+            </a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" class="contact">
+      <div class="container">
+        <div class="contact-box">
+          <div>
+            <div class="eyebrow">Ready when you are</div>
+            <h2>Let’s make your market journey a little less chaotic.</h2>
+            <p>
+              Contact The 19th Trader for account-handling services, stock advice,
+              investment guidance, portfolio management, and stock market education.
+            </p>
+          </div>
+
+          <div class="contact-buttons">
+            <a
+              class="button button-gold"
+              href="https://wa.me/917683058560?text=Hello%20The%2019th%20Trader%2C%20I%20want%20to%20discuss%20your%20services."
+              target="_blank"
+              rel="noopener"
+            >
+              WhatsApp Us
+            </a>
+
+            <a
+              class="button button-outline"
+              href="https://instagram.com/the_19th_trader"
+              target="_blank"
+              rel="noopener"
+            >
+              Instagram
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      © 2026 The 19th Trader. All rights reserved.
+
+      <div class="disclaimer">
+        Disclaimer: Information provided through this website and community is for
+        educational and informational
+        involve risk. Ensure that any account-handling, advisory, or portfolio
+        management services comply with applicable laws and regulations.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function showResult(message) {
+      const result = document.getElementById("quizResult");
+      result.textContent = message;
+      result.style.display = "block";
+      result.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+    }
+  </script>
+</body>
+</html>
