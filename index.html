@@ -753,461 +753,274 @@
         <div>Stream Connected • Singularity Active</div>
       </div>
     </footer>
+    <script>
       /* ========================================================
-         LIVE MARKET TICK STREAM ENGINE (WEBSOCKET + FALLBACK)
+         COSMIC ACCRETION DISK & STARWARP ANIMATION
          ======================================================== */
-      var liveWsPrice = 68420.00;
+      var cCanvas = document.getElementById("cosmicCanvas");
+      var cCtx = cCanvas ? cCanvas.getContext("2d") : null;
+      var cW = window.innerWidth, cH = window.innerHeight;
+      var cStars = [], accretionAngle = 0;
+      var warpSpeed = 1;
+      var cosmicRunning = true;
 
-      function initLiveMarketFeed() {
-        var socketDot = document.getElementById("socketLiveDot");
-        var socketText = document.getElementById("socketStatusText");
+      function resizeCosmic() {
+        if (!cCanvas) return;
+        cW = cCanvas.width = window.innerWidth;
+        cH = cCanvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeCosmic);
+      resizeCosmic();
 
-        try {
-          var ws = new WebSocket("wss://stream.binance.com:9443/ws/btcusdt@ticker");
+      for (var i = 0; i < 400; i++) {
+        cStars.push({
+          x: (Math.random() - 0.5) * cW * 1.5,
+          y: (Math.random() - 0.5) * cH * 1.5,
+          z: Math.random() * cW,
+          size: Math.random() * 2 + 0.5,
+          color: Math.random() > 0.35 ? "#38bdf8" : (Math.random() > 0.5 ? "#f59e0b" : "#ffffff")
+        });
+      }
 
-          ws.onopen = function() {
-            if (socketDot) socketDot.style.background = "var(--green)";
-            if (socketText) socketText.innerText = "DESK 01 // WS LIVE STREAM";
-          };
+      function drawCosmicWormhole() {
+        if (!cosmicRunning || !cCtx) return;
 
-          ws.onmessage = function(event) {
-            var data = JSON.parse(event.data);
-            var price = parseFloat(data.c);
-            var change = parseFloat(data.P);
+        cCtx.fillStyle = "rgba(1, 4, 10, 0.28)";
+        cCtx.fillRect(0, 0, cW, cH);
 
-            if (!isNaN(price)) {
-              var prev = liveWsPrice;
-              liveWsPrice = price;
+        var cx = cW / 2;
+        var cy = cH / 2;
 
-              var quoteEl = document.getElementById("quoteBtc");
-              var changeEl = document.getElementById("changeBtc");
-              var box = document.getElementById("boxBtc");
+        accretionAngle += 0.015 * warpSpeed;
+        for (var r = 70; r < 260; r += 26) {
+          cCtx.save();
+          cCtx.translate(cx, cy);
+          cCtx.rotate(accretionAngle * (r % 2 === 0 ? 1 : -0.75));
+          cCtx.beginPath();
+          cCtx.ellipse(0, 0, r * 1.35, r * 0.72, accretionAngle * 0.15, 0, Math.PI * 2);
+          cCtx.strokeStyle = r > 180 ? "rgba(56, 189, 248, 0.14)" : "rgba(245, 158, 11, 0.22)";
+          cCtx.lineWidth = Math.max(1, 4 - r / 65);
+          cCtx.stroke();
+          cCtx.restore();
+        }
 
-              if (quoteEl) quoteEl.innerText = price.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-              if (changeEl) {
-                changeEl.innerText = (change >= 0 ? "+" : "") + change.toFixed(2) + "%";
-                changeEl.style.color = change >= 0 ? "var(--green)" : "var(--red)";
-              }
+        for (var j = 0; j < cStars.length; j++) {
+          var s = cStars[j];
+          s.z -= 4.5 * warpSpeed;
 
-              if (box) {
-                box.classList.remove("flash-green", "flash-red");
-                void box.offsetWidth;
-                box.classList.add(price >= prev ? "flash-green" : "flash-red");
-                setTimeout(function() { box.classList.remove("flash-green", "flash-red"); }, 200);
-              }
+          if (s.z <= 0) {
+            s.z = cW;
+            s.x = (Math.random() - 0.5) * cW * 1.5;
+            s.y = (Math.random() - 0.5) * cH * 1.5;
+          }
 
-              var ethEl = document.getElementById("quoteEth");
-              if (ethEl) ethEl.innerText = (price * 0.0518).toFixed(2);
+          var k = 260 / s.z;
+          var px = s.x * k + cx;
+          var py = s.y * k + cy;
+
+          if (px >= 0 && px <= cW && py >= 0 && py <= cH) {
+            var sz = Math.max(0.1, (1 - s.z / cW) * s.size * 2);
+            cCtx.beginPath();
+            cCtx.arc(px, py, sz, 0, Math.PI * 2);
+            cCtx.fillStyle = s.color;
+            cCtx.fill();
+
+            if (warpSpeed > 2) {
+              cCtx.beginPath();
+              cCtx.moveTo(px, py);
+              cCtx.lineTo(px - (px - cx) * 0.08 * warpSpeed, py - (py - cy) * 0.08 * warpSpeed);
+              cCtx.strokeStyle = s.color;
+              cCtx.lineWidth = sz;
+              cCtx.stroke();
             }
-          };
-
-          ws.onerror = function() {
-            activateLocalTickerFallback();
-          };
-        } catch(e) {
-          activateLocalTickerFallback();
+          }
         }
+
+        var radGrad = cCtx.createRadialGradient(cx, cy, 35, cx, cy, 120);
+        radGrad.addColorStop(0, "#000000");
+        radGrad.addColorStop(0.5, "rgba(2, 6, 23, 0.96)");
+        radGrad.addColorStop(0.8, "rgba(56, 189, 248, 0.4)");
+        radGrad.addColorStop(1, "transparent");
+
+        cCtx.beginPath();
+        cCtx.arc(cx, cy, 120, 0, Math.PI * 2);
+        cCtx.fillStyle = radGrad;
+        cCtx.fill();
+
+        requestAnimationFrame(drawCosmicWormhole);
       }
+      drawCosmicWormhole();
 
-      function activateLocalTickerFallback() {
-        var socketText = document.getElementById("socketStatusText");
-        if (socketText) socketText.innerText = "DESK 01 // LOCAL TICK FEED";
+      /* ========================================================
+         NATIVE WEB AUDIO HARMONIC CHANT SYNTHESIZER
+         ======================================================== */
+      var audioCtx = null;
 
-        setInterval(function() {
-          var delta = (Math.random() - 0.49) * 14;
-          liveWsPrice += delta;
+      function playCosmicChantSound(type) {
+        try {
+          var AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          if (!audioCtx) audioCtx = new AudioContext();
+          if (audioCtx.state === "suspended") audioCtx.resume();
 
-          var quoteEl = document.getElementById("quoteBtc");
-          if (quoteEl) quoteEl.innerText = liveWsPrice.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          var now = audioCtx.currentTime;
 
-          var ethEl = document.getElementById("quoteEth");
-          if (ethEl) ethEl.innerText = (liveWsPrice * 0.0518).toFixed(2);
-        }, 1200);
+          if (type === "step") {
+            [54, 108, 216].forEach(function(freq, idx) {
+              var osc = audioCtx.createOscillator();
+              var gain = audioCtx.createGain();
+              osc.type = idx === 0 ? "sawtooth" : "sine";
+              osc.frequency.setValueAtTime(freq, now);
+
+              var filter = audioCtx.createBiquadFilter();
+              filter.type = "bandpass";
+              filter.frequency.setValueAtTime(freq * 1.5, now);
+              filter.Q.value = 2.5;
+
+              gain.gain.setValueAtTime(0, now);
+              gain.gain.linearRampToValueAtTime(0.25 / (idx + 1), now + 0.1);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+
+              osc.connect(filter);
+              filter.connect(gain);
+              gain.connect(audioCtx.destination);
+
+              osc.start(now);
+              osc.stop(now + 0.9);
+            });
+          } else if (type === "launch") {
+            var osc = audioCtx.createOscillator();
+            var gain = audioCtx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(55, now);
+            osc.frequency.exponentialRampToValueAtTime(950, now + 1.2);
+
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 1.4);
+          }
+        } catch(e) {}
       }
 
       /* ========================================================
-         ADVANCED CANDLESTICK & VOLUME CHART ENGINE
+         3-2-1 "LET'S GO!" COUNTDOWN FLOW
          ======================================================== */
-      var simCanvas, simCtx;
-      var candles = [];
-      var accountBalance = 100000;
-      var activePosition = null;
-      var mouseX = -1, mouseY = -1;
+      window.countdownStarted = false;
 
-      function initSimulatorEngine() {
-        simCanvas = document.getElementById("simChartCanvas");
-        if (!simCanvas) return;
-        simCtx = simCanvas.getContext("2d");
-        resizeCanvas();
+      function startCountdownSequence() {
+        if (window.countdownStarted) return;
+        window.countdownStarted = true;
 
-        var base = liveWsPrice;
-        for (var i = 0; i < 45; i++) {
-          var delta = (Math.random() - 0.49) * 35;
-          var open = base;
-          var close = open + delta;
-          var high = Math.max(open, close) + Math.random() * 15;
-          var low = Math.min(open, close) - Math.random() * 15;
-          var vol = Math.floor(Math.random() * 120 + 20);
-          candles.push({ open: open, high: high, low: low, close: close, vol: vol });
-          base = close;
-        }
+        var portalUi = document.getElementById("portalUi");
+        if (portalUi) portalUi.style.display = "none";
 
-        simCanvas.addEventListener("mousemove", function(e) {
-          var rect = simCanvas.getBoundingClientRect();
-          mouseX = e.clientX - rect.left;
-          mouseY = e.clientY - rect.top;
-          drawAdvancedChart();
-        });
+        var hud = document.getElementById("countdownHud");
+        if (hud) hud.style.display = "flex";
 
-        simCanvas.addEventListener("mouseleave", function() {
-          mouseX = -1;
-          mouseY = -1;
-          drawAdvancedChart();
-        });
+        var sequence = [
+          { text: "3", sound: "step", speed: 2 },
+          { text: "2", sound: "step", speed: 4.5 },
+          { text: "1", sound: "step", speed: 7 },
+          { text: "LET'S GO!", sound: "launch", speed: 18 }
+        ];
 
-        drawAdvancedChart();
-      }
-
-      function resizeCanvas() {
-        if (!simCanvas || !simCanvas.parentElement) return;
-        var parentWidth = simCanvas.parentElement.clientWidth;
-        var parentHeight = simCanvas.parentElement.clientHeight;
-        if (parentWidth > 0 && parentHeight > 0) {
-          simCanvas.width = parentWidth;
-          simCanvas.height = parentHeight;
-        }
-      }
-
-      function drawAdvancedChart() {
-        if (!simCtx || !simCanvas || simCanvas.width === 0) return;
-        var w = simCanvas.width;
-        var h = simCanvas.height;
-
-        simCtx.clearRect(0, 0, w, h);
-
-        var chartHeight = h * 0.76;
-        var volHeight = h * 0.22;
-
-        var minPrice = Infinity, maxPrice = -Infinity, maxVol = 0;
-        candles.forEach(function(c) {
-          if (c.low < minPrice) minPrice = c.low;
-          if (c.high > maxPrice) maxPrice = c.high;
-          if (c.vol > maxVol) maxVol = c.vol;
-        });
-
-        minPrice -= 30;
-        maxPrice += 30;
-        var priceRange = maxPrice - minPrice;
-        var cWidth = Math.max(7, (w / candles.length) - 5);
-
-        // EMA 20 Calculation
-        var emaPoints = [];
-        var k = 2 / (20 + 1);
-        var prevEMA = candles[0].close;
-        candles.forEach(function(c) {
-          prevEMA = (c.close * k) + (prevEMA * (1 - k));
-          emaPoints.push(prevEMA);
-        });
-
-        var hoveredCandle = null;
-
-        // 1. Candlestick & Volume Profile Bars
-        candles.forEach(function(c, idx) {
-          var x = idx * (cWidth + 5) + 12;
-          var yOpen = chartHeight - ((c.open - minPrice) / priceRange) * chartHeight;
-          var yClose = chartHeight - ((c.close - minPrice) / priceRange) * chartHeight;
-          var yHigh = chartHeight - ((c.high - minPrice) / priceRange) * chartHeight;
-          var yLow = chartHeight - ((c.low - minPrice) / priceRange) * chartHeight;
-          var isUp = c.close >= c.open;
-
-          simCtx.strokeStyle = isUp ? "#10b981" : "#f43f5e";
-          simCtx.fillStyle = isUp ? "#10b981" : "#f43f5e";
-
-          // Wick
-          simCtx.beginPath();
-          simCtx.moveTo(x + cWidth / 2, yHigh);
-          simCtx.lineTo(x + cWidth / 2, yLow);
-          simCtx.stroke();
-
-          // Candle Body
-          simCtx.fillRect(x, Math.min(yOpen, yClose), cWidth, Math.max(2, Math.abs(yClose - yOpen)));
-
-          // Volume Bar
-          var vBarHeight = (c.vol / maxVol) * volHeight;
-          simCtx.fillStyle = isUp ? "rgba(16, 185, 129, 0.35)" : "rgba(244, 63, 94, 0.35)";
-          simCtx.fillRect(x, h - vBarHeight, cWidth, vBarHeight);
-
-          if (mouseX >= x && mouseX <= x + cWidth + 5) {
-            hoveredCandle = c;
-          }
-        });
-
-        // 2. EMA Line
-        simCtx.strokeStyle = "#f59e0b";
-        simCtx.lineWidth = 1.5;
-        simCtx.beginPath();
-        emaPoints.forEach(function(ema, idx) {
-          var x = idx * (cWidth + 5) + 12 + cWidth / 2;
-          var y = chartHeight - ((ema - minPrice) / priceRange) * chartHeight;
-          if (idx === 0) simCtx.moveTo(x, y);
-          else simCtx.lineTo(x, y);
-        });
-        simCtx.stroke();
-
-        // 3. Targets (Entry / SL / TP)
-        if (activePosition) {
-          var entryY = chartHeight - ((activePosition.entry - minPrice) / priceRange) * chartHeight;
-          var slY = chartHeight - (((activePosition.type === 'LONG' ? activePosition.entry - activePosition.sl : activePosition.entry + activePosition.sl) - minPrice) / priceRange) * chartHeight;
-          var tpY = chartHeight - (((activePosition.type === 'LONG' ? activePosition.entry + activePosition.tp : activePosition.entry - activePosition.tp) - minPrice) / priceRange) * chartHeight;
-
-          simCtx.strokeStyle = "#38bdf8";
-          simCtx.setLineDash([6, 4]);
-          simCtx.beginPath(); simCtx.moveTo(0, entryY); simCtx.lineTo(w, entryY); simCtx.stroke();
-
-          simCtx.strokeStyle = "#f43f5e";
-          simCtx.beginPath(); simCtx.moveTo(0, slY); simCtx.lineTo(w, slY); simCtx.stroke();
-
-          simCtx.strokeStyle = "#10b981";
-          simCtx.beginPath(); simCtx.moveTo(0, tpY); simCtx.lineTo(w, tpY); simCtx.stroke();
-          simCtx.setLineDash([]);
-        }
-
-        // 4. Crosshairs
-        if (mouseX >= 0 && mouseY >= 0) {
-          simCtx.strokeStyle = "rgba(148, 163, 184, 0.45)";
-          simCtx.setLineDash([3, 3]);
-          simCtx.beginPath();
-          simCtx.moveTo(mouseX, 0); simCtx.lineTo(mouseX, h);
-          simCtx.moveTo(0, mouseY); simCtx.lineTo(w, mouseY);
-          simCtx.stroke();
-          simCtx.setLineDash([]);
-        }
-
-        if (hoveredCandle) {
-          var elO = document.getElementById("hudO");
-          var elH = document.getElementById("hudH");
-          var elL = document.getElementById("hudL");
-          var elC = document.getElementById("hudC");
-          var elV = document.getElementById("hudV");
-
-          if (elO) elO.innerText = "O: " + hoveredCandle.open.toFixed(2);
-          if (elH) elH.innerText = "H: " + hoveredCandle.high.toFixed(2);
-          if (elL) elL.innerText = "L: " + hoveredCandle.low.toFixed(2);
-          if (elC) elC.innerText = "C: " + hoveredCandle.close.toFixed(2);
-          if (elV) elV.innerText = "VOL: " + hoveredCandle.vol;
-        }
-      }
-
-      function tickSimEngine() {
-        var delta = (Math.random() - 0.49) * 8;
-        liveWsPrice += delta;
-
-        var pEl = document.getElementById("arenaPrice");
-        if (pEl) pEl.innerText = liveWsPrice.toFixed(2);
-
-        if (candles.length > 0) {
-          var last = candles[candles.length - 1];
-          last.close = liveWsPrice;
-          if (liveWsPrice > last.high) last.high = liveWsPrice;
-          if (liveWsPrice < last.low) last.low = liveWsPrice;
-          last.vol += Math.floor(Math.random() * 3 + 1);
-        }
-
-        if (activePosition) {
-          var diff = activePosition.type === "LONG"
-            ? liveWsPrice - activePosition.entry
-            : activePosition.entry - liveWsPrice;
-          
-          var pnl = diff * activePosition.lots * 10;
-          var pnlEl = document.getElementById("arenaPnl");
-          if (pnlEl) {
-            pnlEl.innerText = (pnl >= 0 ? "+$" : "-$") + Math.abs(pnl).toFixed(2);
-            pnlEl.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
-          }
-
-          if (diff <= -activePosition.sl) {
-            closeTrade("STOP LOSS HIT @ " + liveWsPrice.toFixed(2) + " (-$" + (activePosition.sl * activePosition.lots * 10).toFixed(2) + ")");
-          } else if (diff >= activePosition.tp) {
-            closeTrade("TAKE PROFIT HIT @ " + liveWsPrice.toFixed(2) + " (+$" + (activePosition.tp * activePosition.lots * 10).toFixed(2) + ")");
+        var index = 0;
+        function runStep() {
+          if (index < sequence.length) {
+            var current = sequence[index];
+            if (hud) hud.innerHTML = '<div class="countdown-number">' + current.text + '</div>';
+            warpSpeed = current.speed;
+            playCosmicChantSound(current.sound);
+            index++;
+            setTimeout(runStep, 950);
+          } else {
+            forceUnlockPortal();
+            cosmicRunning = false;
           }
         }
-
-        drawAdvancedChart();
+        runStep();
       }
 
-      setInterval(function() {
-        if (candles.length > 0) {
-          candles.shift();
-          candles.push({
-            open: liveWsPrice,
-            high: liveWsPrice,
-            low: liveWsPrice,
-            close: liveWsPrice,
-            vol: Math.floor(Math.random() * 20 + 10)
+      /* ========================================================
+         THREE.JS WORKSTATION SCENE (FAIL-SAFE INIT)
+         ======================================================== */
+      var scene, camera, renderer, tradingRoomGroup;
+      var targetCameraZ = 12, targetCameraY = 2, targetCameraX = 0;
+
+      function initSafeThree() {
+        if (typeof THREE === "undefined") return;
+        try {
+          var canvas = document.getElementById("webgl-canvas");
+          if (!canvas) return;
+
+          scene = new THREE.Scene();
+          scene.fog = new THREE.FogExp2(0x020617, 0.045);
+
+          camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+          camera.position.set(0, targetCameraY, targetCameraZ);
+
+          renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+          var ambientLight = new THREE.AmbientLight(0x0f172a, 1.5);
+          scene.add(ambientLight);
+
+          var cyanLight = new THREE.PointLight(0x38bdf8, 3, 25);
+          cyanLight.position.set(0, 4, 8);
+          scene.add(cyanLight);
+
+          tradingRoomGroup = new THREE.Group();
+          tradingRoomGroup.position.set(0, -1, -5);
+
+          var desk = new THREE.Mesh(
+            new THREE.BoxGeometry(10, 0.3, 4),
+            new THREE.MeshStandardMaterial({ color: 0x0a1122 })
+          );
+          tradingRoomGroup.add(desk);
+
+          [-2.7, 0, 2.7].forEach(function(xPos) {
+            var m = new THREE.Mesh(
+              new THREE.BoxGeometry(2.35, 1.5, 0.08),
+              new THREE.MeshStandardMaterial({ color: 0x020617 })
+            );
+            m.position.set(xPos, 1.6, -0.2);
+            if (xPos !== 0) m.rotation.y = xPos < 0 ? 0.3 : -0.3;
+            tradingRoomGroup.add(m);
           });
-        }
-      }, 4000);
 
-      setInterval(tickSimEngine, 600);
+          scene.add(tradingRoomGroup);
 
-      function openTrade(type) {
-        var lots = parseInt(document.getElementById("tradeLots").value) || 1;
-        var sl = parseFloat(document.getElementById("tradeSL").value) || 150;
-        var tp = parseFloat(document.getElementById("tradeTP").value) || 300;
-
-        activePosition = { type: type, entry: liveWsPrice, lots: lots, sl: sl, tp: tp };
-        var fb = document.getElementById("arenaFeedback");
-        if (fb) {
-          fb.innerText = "ACTIVE " + type + " (" + lots + " LOTS) @ " + liveWsPrice.toFixed(2);
-          fb.style.color = type === "LONG" ? "var(--green)" : "var(--red)";
-        }
-      }
-
-      function closeTrade(reason) {
-        if (!activePosition) return;
-        var diff = activePosition.type === "LONG"
-          ? liveWsPrice - activePosition.entry
-          : activePosition.entry - liveWsPrice;
-        var realized = diff * activePosition.lots * 10;
-
-        accountBalance += realized;
-        var balEl = document.getElementById("arenaBalance");
-        var pnlEl = document.getElementById("arenaPnl");
-        var fbEl = document.getElementById("arenaFeedback");
-
-        if (balEl) balEl.innerText = "$" + accountBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
-        if (pnlEl) {
-          pnlEl.innerText = "$0.00";
-          pnlEl.style.color = "var(--text-muted)";
-        }
-        if (fbEl) {
-          fbEl.innerText = reason || "CLOSED @ " + liveWsPrice.toFixed(2) + " (" + (realized >= 0 ? "+$" : "-$") + Math.abs(realized).toFixed(2) + ")";
-          fbEl.style.color = "var(--text-muted)";
-        }
-        activePosition = null;
-      }
-
-      var bL = document.getElementById("btnLong");
-      var bS = document.getElementById("btnShort");
-      var bC = document.getElementById("btnClosePos");
-
-      if (bL) bL.addEventListener("click", function() { openTrade("LONG"); });
-      if (bS) bS.addEventListener("click", function() { openTrade("SHORT"); });
-      if (bC) bC.addEventListener("click", function() { closeTrade("POSITION FLATTENED BY USER"); });
-
-      /* ========================================================
-         DIAGNOSTICS & DETECTIVE LOGIC
-         ======================================================== */
-      var quizQuestions = [
-        {
-          q: "When a high-conviction trade pulls back to your stop-loss, your rule is to:",
-          options: [
-            { text: "Cut immediately at the invalidation level without rationalization.", type: "systematic" },
-            { text: "Average down because the asset is now cheaper fundamentally.", type: "value" },
-            { text: "Quickly flip short to capture the breakdown momentum.", type: "scalper" }
-          ]
-        },
-        {
-          q: "Your defining benchmark for performance consistency is:",
-          options: [
-            { text: "Strict adherence to trade management parameters across 100 setups.", type: "systematic" },
-            { text: "Capitalizing aggressively on hot thematic sector rotations.", type: "scalper" },
-            { text: "Long-term compounding based on underlying earnings resilience.", type: "value" }
-          ]
-        }
-      ];
-
-      var currentQuizIdx = 0;
-      var quizScores = { systematic: 0, scalper: 0, value: 0 };
-
-      function renderQuiz() {
-        var qText = document.getElementById("quizQuestionText");
-        var container = document.getElementById("quizOptionsContainer");
-        if (!qText || !container) return;
-
-        if (currentQuizIdx >= quizQuestions.length) {
-          var qc = document.getElementById("quizContent");
-          var qv = document.getElementById("quizResultView");
-          if (qc) qc.style.display = "none";
-          if (qv) qv.style.display = "block";
-          var rt = document.getElementById("resultTitle");
-          var rd = document.getElementById("resultDesc");
-          if (rt) rt.innerText = "Systematic Trend & Structure Trader";
-          if (rd) rd.innerText = "Your real edge comes from strict invalidation criteria, statistical probabilities, and emotional detachment.";
-          return;
-        }
-
-        var data = quizQuestions[currentQuizIdx];
-        qText.innerText = data.q;
-        container.innerHTML = "";
-
-        data.options.forEach(function(opt) {
-          var btn = document.createElement("button");
-          btn.className = "quiz-btn";
-          btn.innerText = opt.text;
-          btn.onclick = function() {
-            quizScores[opt.type]++;
-            currentQuizIdx++;
-            renderQuiz();
-          };
-          container.appendChild(btn);
-        });
-      }
-
-      function resetQuiz() {
-        currentQuizIdx = 0;
-        quizScores = { systematic: 0, scalper: 0, value: 0 };
-        var qc = document.getElementById("quizContent");
-        var qv = document.getElementById("quizResultView");
-        if (qc) qc.style.display = "block";
-        if (qv) qv.style.display = "none";
-        renderQuiz();
-      }
-
-      function checkDetective(btn, isCorrect) {
-        var msg = document.getElementById("detectiveMsg");
-        document.querySelectorAll(".choice-btn").forEach(function(c) {
-          c.classList.remove("correct", "wrong");
-        });
-        if (isCorrect) {
-          btn.classList.add("correct");
-          if (msg) {
-            msg.innerText = "✓ Correct! Classic Head & Shoulders distribution with confirmed neckline break.";
-            msg.style.color = "var(--green)";
+          function render() {
+            requestAnimationFrame(render);
+            if (camera) {
+              camera.position.x += (targetCameraX - camera.position.x) * 0.05;
+              camera.position.y += (targetCameraY - camera.position.y) * 0.05;
+              camera.position.z += (targetCameraZ - camera.position.z) * 0.05;
+            }
+            renderer.render(scene, camera);
           }
-        } else {
-          btn.classList.add("wrong");
-          if (msg) {
-            msg.innerText = "✗ Incorrect pattern. Notice the higher peak centered between two symmetrical shoulders.";
-            msg.style.color = "var(--red)";
-          }
+          render();
+        } catch(e) {}
+      }
+
+      window.addEventListener("scroll", function() {
+        var scrollY = window.scrollY;
+        var maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        var progress = Math.min(Math.max(scrollY / (maxScroll || 1), 0), 1);
+
+        targetCameraX = Math.sin(progress * Math.PI * 2) * 2.5;
+        targetCameraY = 0.5 - Math.cos(progress * Math.PI) * 0.8;
+        targetCameraZ = 5.5 - progress * 2.2;
+
+        if (tradingRoomGroup) {
+          tradingRoomGroup.rotation.y = (progress - 0.5) * 0.5;
         }
-      }
-
-      var themeBtn = document.getElementById("themeToggle");
-      if (themeBtn) {
-        themeBtn.addEventListener("click", function() {
-          document.body.classList.toggle("light");
-          var isLight = document.body.classList.contains("light");
-          themeBtn.innerText = isLight ? "🌙" : "☀️";
-          drawAdvancedChart();
-        });
-      }
-
-      // Safe DOM Init
-      window.addEventListener("DOMContentLoaded", function() {
-        initSafeThree();
-        initLiveMarketFeed();
-        renderQuiz();
-        initSimulatorEngine();
-        window.addEventListener("resize", function() {
-          resizeCanvas();
-          drawAdvancedChart();
-        });
       });
-    </script>
-  </body>
-</html>
       /* ========================================================
          LIVE MARKET TICK STREAM ENGINE (WEBSOCKET + FALLBACK)
          ======================================================== */
