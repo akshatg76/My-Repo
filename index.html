@@ -22,10 +22,10 @@
         --bg-deep: #030712;
         --bg-surface: rgba(11, 19, 38, 0.75);
         --bg-panel: rgba(15, 23, 42, 0.85);
-        --bg-card: rgba(17, 27, 49, 0.72);
-        --bg-card-subtle: rgba(255, 255, 255, 0.03);
-        --border-glass: rgba(56, 189, 248, 0.18);
-        --border-subtle: rgba(255, 255, 255, 0.08);
+        --bg-card: rgba(17, 27, 49, 0.75);
+        --bg-card-subtle: rgba(255, 255, 255, 0.04);
+        --border-glass: rgba(56, 189, 248, 0.22);
+        --border-subtle: rgba(255, 255, 255, 0.1);
         --text-primary: #f8fafc;
         --text-secondary: #94a3b8;
         --text-muted: #64748b;
@@ -35,7 +35,7 @@
         --gold: #f59e0b;
         --green: #10b981;
         --red: #f43f5e;
-        --header-bg: rgba(3, 7, 18, 0.75);
+        --header-bg: rgba(3, 7, 18, 0.85);
         --chart-bg: #020617;
         --panel-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(14, 165, 233, 0.06);
         --font-sans: "Plus Jakarta Sans", sans-serif;
@@ -44,19 +44,19 @@
 
       body.light {
         --bg-deep: #f1f5f9;
-        --bg-surface: rgba(255, 255, 255, 0.85);
-        --bg-panel: rgba(255, 255, 255, 0.95);
-        --bg-card: rgba(255, 255, 255, 0.88);
-        --bg-card-subtle: rgba(15, 23, 42, 0.04);
-        --border-glass: rgba(37, 99, 235, 0.22);
-        --border-subtle: rgba(15, 23, 42, 0.1);
+        --bg-surface: rgba(255, 255, 255, 0.95);
+        --bg-panel: #ffffff;
+        --bg-card: #ffffff;
+        --bg-card-subtle: rgba(15, 23, 42, 0.05);
+        --border-glass: rgba(37, 99, 235, 0.25);
+        --border-subtle: rgba(15, 23, 42, 0.12);
         --text-primary: #0f172a;
         --text-secondary: #334155;
         --text-muted: #64748b;
         --cyan: #0284c7;
         --cyan-glow: rgba(2, 132, 199, 0.18);
         --blue-accent: #1d4ed8;
-        --header-bg: rgba(241, 245, 249, 0.82);
+        --header-bg: rgba(241, 245, 249, 0.92);
         --chart-bg: #f8fafc;
         --panel-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
       }
@@ -87,7 +87,7 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(3, 7, 18, 0.82) 100%);
+        background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(3, 7, 18, 0.85) 100%);
         z-index: 0;
       }
       body.light .cinematic-vignette {
@@ -101,22 +101,23 @@
         z-index: 10;
       }
 
+      /* Portal Overlay */
       #introOverlay {
         position: fixed;
         inset: 0;
-        background: radial-gradient(circle at center, #07172f 0%, #020617 80%);
-        z-index: 1000;
+        background: radial-gradient(circle at center, #07172f 0%, #020617 85%);
+        z-index: 99999;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), visibility 1.2s ease;
+        transition: opacity 0.8s ease, visibility 0.8s ease;
       }
 
       #introOverlay.fade-out {
-        opacity: 0;
-        visibility: hidden;
-        pointer-events: none;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
       }
 
       .portal-core {
@@ -127,6 +128,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
+        user-select: none;
       }
 
       .portal-ring {
@@ -156,6 +158,7 @@
         text-shadow: 0 0 12px var(--cyan);
         z-index: 2;
         text-align: center;
+        pointer-events: none;
       }
 
       @keyframes spinPortal { 100% { transform: rotate(360deg); } }
@@ -245,7 +248,7 @@
 
       .btn-primary {
         background: linear-gradient(135deg, var(--cyan), var(--blue-accent));
-        color: #ffffff;
+        color: #ffffff !important;
         box-shadow: 0 4px 18px var(--cyan-glow);
       }
       .btn-primary:hover { transform: translateY(-2px); }
@@ -329,7 +332,7 @@
       .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; margin-top: 36px; }
       .news-card { padding: 26px; display: flex; flex-direction: column; justify-content: space-between; }
       .news-card-time { font-size: 0.72rem; color: var(--cyan); font-family: var(--font-mono); font-weight: 700; margin-bottom: 8px; }
-      .news-card h3 { font-size: 1.15rem; line-height: 1.4; margin-bottom: 12px; }
+      .news-card h3 { font-size: 1.15rem; line-height: 1.4; margin-bottom: 12px; color: var(--text-primary); }
       .news-card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 20px; }
 
       .quiz-container { padding: 36px; max-width: 820px; margin: 30px auto 0; }
@@ -349,7 +352,6 @@
       }
       .quiz-btn:hover { background: rgba(56, 189, 248, 0.1); border-color: var(--cyan); transform: translateX(6px); }
 
-      /* Advanced Interactive Trading Simulator */
       .arena-shell { display: grid; grid-template-columns: 1fr 340px; gap: 24px; margin-top: 36px; }
       .arena-board { padding: 24px; }
       .arena-display {
@@ -442,15 +444,17 @@
     <canvas id="webgl-canvas"></canvas>
     <div class="cinematic-vignette"></div>
 
-    <!-- Opening Portal Overlay -->
+    <!-- Opening Portal Overlay (Click or Skip) -->
     <div id="introOverlay">
       <div class="portal-core" id="portalTrigger">
         <div class="portal-ring"></div>
         <div class="portal-ring"></div>
-        <div class="portal-text">ENTER<br />PORTAL</div>
+        <div class="portal-text">CLICK TO<br />ENTER</div>
       </div>
-      <div style="margin-top: 32px; text-align: center;">
-        <button class="btn btn-ghost" id="skipIntroBtn" style="font-size: 0.78rem;">Skip Intro Sequence</button>
+      <div style="margin-top: 36px; text-align: center; z-index: 100000;">
+        <button class="btn btn-ghost" id="skipIntroBtn" style="font-size: 0.85rem; cursor: pointer; padding: 10px 24px;">
+          Skip Intro Sequence &gt;
+        </button>
       </div>
     </div>
 
@@ -548,7 +552,7 @@
         </div>
 
         <div class="news-grid" id="newsFeedGrid">
-          <!-- Dynamic articles will populate here -->
+          <!-- Feeds populated via JavaScript -->
         </div>
       </div>
     </section>
@@ -590,7 +594,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
               <div>
                 <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--cyan); font-weight: 700;">INSTRUMENT: NIFTY_FUT</span>
-                <span id="arenaSpread" style="font-size: 0.72rem; color: var(--text-muted); margin-left: 10px;">SPREAD: 0.50</span>
+                <span style="font-size: 0.72rem; color: var(--text-muted); margin-left: 10px;">SPREAD: 0.50</span>
               </div>
               <strong id="arenaPrice" style="font-family: var(--font-mono); font-size: 1.3rem;">24,800.00</strong>
             </div>
@@ -719,11 +723,50 @@
     </footer>
     <script>
       /* ========================================================
-         1. THREE.JS 3D TRADING CHAMBER WITH REAL CANDLESTICK MONITORS
+         PORTAL UNLOCK LOGIC (GUARANTEED DISMISSAL)
+         ======================================================== */
+      let introDismissed = false;
+
+      function dismissPortal() {
+        if (introDismissed) return;
+        introDismissed = true;
+        
+        const overlay = document.getElementById("introOverlay");
+        if (overlay) {
+          overlay.classList.add("fade-out");
+          setTimeout(() => {
+            overlay.style.display = "none";
+          }, 800);
+        }
+
+        // Move 3D camera if Three.js is loaded
+        if (typeof targetCameraZ !== 'undefined') {
+          targetCameraZ = 5.5;
+          targetCameraY = 0.5;
+          targetCameraX = 0;
+        }
+      }
+
+      // Attach click handlers immediately
+      const trigger = document.getElementById("portalTrigger");
+      if (trigger) trigger.addEventListener("click", dismissPortal);
+
+      const skipBtn = document.getElementById("skipIntroBtn");
+      if (skipBtn) skipBtn.addEventListener("click", dismissPortal);
+
+      // Auto-unlock safeguard after 2.5 seconds so no user is ever locked out
+      setTimeout(() => {
+        dismissPortal();
+      }, 2500);
+
+      window.addEventListener("scroll", () => {
+        if (!introDismissed) dismissPortal();
+      });
+
+      /* ========================================================
+         1. THREE.JS 3D TRADING CHAMBER WITH MONITOR GENERATION
          ======================================================== */
       let scene, camera, renderer, portalRing, tradingRoomGroup, particles;
-      let monitorCanvases = [], monitorTextures = [];
-      let introDone = false;
       let targetCameraZ = 12, targetCameraY = 2, targetCameraX = 0;
 
       function createMonitorCanvasTexture(isLightMode = false) {
@@ -732,11 +775,9 @@
         mCanvas.height = 256;
         const ctx = mCanvas.getContext("2d");
 
-        // Background
         ctx.fillStyle = isLightMode ? "#ffffff" : "#020712";
         ctx.fillRect(0, 0, 512, 256);
 
-        // Grid
         ctx.strokeStyle = isLightMode ? "rgba(0,0,0,0.06)" : "rgba(56, 189, 248, 0.1)";
         ctx.lineWidth = 1;
         for (let x = 0; x < 512; x += 32) {
@@ -746,7 +787,6 @@
           ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(512, y); ctx.stroke();
         }
 
-        // Draw candlesticks on the 3D screens
         let cur = 140;
         for (let x = 20; x < 500; x += 16) {
           const delta = (Math.random() - 0.49) * 26;
@@ -759,106 +799,102 @@
           ctx.strokeStyle = isUp ? "#10b981" : "#f43f5e";
           ctx.fillStyle = isUp ? "#10b981" : "#f43f5e";
 
-          // Wick
           ctx.beginPath();
           ctx.moveTo(x + 5, 256 - high);
           ctx.lineTo(x + 5, 256 - low);
           ctx.stroke();
 
-          // Body
           ctx.fillRect(x, 256 - Math.max(open, close), 10, Math.max(2, Math.abs(close - open)));
           cur = Math.max(40, Math.min(220, close));
         }
 
-        const texture = new THREE.CanvasTexture(mCanvas);
-        monitorCanvases.push({ canvas: mCanvas, ctx: ctx });
-        monitorTextures.push(texture);
-        return texture;
+        return new THREE.CanvasTexture(mCanvas);
       }
 
       function initThree() {
-        const canvas = document.getElementById("webgl-canvas");
-        scene = new THREE.Scene();
-        scene.fog = new THREE.FogExp2(0x030712, 0.045);
+        try {
+          const canvas = document.getElementById("webgl-canvas");
+          if (!canvas || typeof THREE === "undefined") return;
 
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-        camera.position.set(0, 0, 20);
+          scene = new THREE.Scene();
+          scene.fog = new THREE.FogExp2(0x030712, 0.045);
 
-        renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+          camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+          camera.position.set(0, 0, 20);
 
-        const ambientLight = new THREE.AmbientLight(0x0f172a, 1.4);
-        scene.add(ambientLight);
+          renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
+          renderer.setSize(window.innerWidth, window.innerHeight);
+          renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        const cyanPointLight = new THREE.PointLight(0x38bdf8, 3, 30);
-        cyanPointLight.position.set(0, 4, 8);
-        scene.add(cyanPointLight);
+          const ambientLight = new THREE.AmbientLight(0x0f172a, 1.4);
+          scene.add(ambientLight);
 
-        const goldPointLight = new THREE.PointLight(0xf59e0b, 1.8, 20);
-        goldPointLight.position.set(-6, -2, 5);
-        scene.add(goldPointLight);
+          const cyanPointLight = new THREE.PointLight(0x38bdf8, 3, 30);
+          cyanPointLight.position.set(0, 4, 8);
+          scene.add(cyanPointLight);
 
-        // 1. Glowing Portal Ring
-        const portalGeo = new THREE.TorusGeometry(3.2, 0.08, 16, 100);
-        const portalMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
-        portalRing = new THREE.Mesh(portalGeo, portalMat);
-        scene.add(portalRing);
+          const goldPointLight = new THREE.PointLight(0xf59e0b, 1.8, 20);
+          goldPointLight.position.set(-6, -2, 5);
+          scene.add(goldPointLight);
 
-        // 2. Persistent Trading Room Group
-        tradingRoomGroup = new THREE.Group();
-        tradingRoomGroup.position.set(0, -1, -5);
+          // Portal Ring
+          const portalGeo = new THREE.TorusGeometry(3.2, 0.08, 16, 100);
+          const portalMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
+          portalRing = new THREE.Mesh(portalGeo, portalMat);
+          scene.add(portalRing);
 
-        // Trading Desk
-        const deskGeo = new THREE.BoxGeometry(10, 0.3, 4);
-        const deskMat = new THREE.MeshStandardMaterial({ color: 0x0a1122, roughness: 0.3 });
-        const desk = new THREE.Mesh(deskGeo, deskMat);
-        tradingRoomGroup.add(desk);
+          // Workstation
+          tradingRoomGroup = new THREE.Group();
+          tradingRoomGroup.position.set(0, -1, -5);
 
-        // Multi-Monitor Setup with Live Candlestick Texture
-        const monitorPositions = [
-          { x: -2.7, y: 1.6, z: -0.2, rotY: 0.32 },
-          { x: 0, y: 1.8, z: -0.5, rotY: 0 },
-          { x: 2.7, y: 1.6, z: -0.2, rotY: -0.32 }
-        ];
+          const deskGeo = new THREE.BoxGeometry(10, 0.3, 4);
+          const deskMat = new THREE.MeshStandardMaterial({ color: 0x0a1122, roughness: 0.3 });
+          const desk = new THREE.Mesh(deskGeo, deskMat);
+          tradingRoomGroup.add(desk);
 
-        monitorPositions.forEach((pos) => {
-          const mGroup = new THREE.Group();
-          mGroup.position.set(pos.x, pos.y, pos.z);
-          mGroup.rotation.y = pos.rotY;
+          const monitorPositions = [
+            { x: -2.7, y: 1.6, z: -0.2, rotY: 0.32 },
+            { x: 0, y: 1.8, z: -0.5, rotY: 0 },
+            { x: 2.7, y: 1.6, z: -0.2, rotY: -0.32 }
+          ];
 
-          // Monitor Frame
-          const frameGeo = new THREE.BoxGeometry(2.35, 1.5, 0.08);
-          const frameMat = new THREE.MeshStandardMaterial({ color: 0x020617 });
-          const frame = new THREE.Mesh(frameGeo, frameMat);
-          mGroup.add(frame);
+          monitorPositions.forEach((pos) => {
+            const mGroup = new THREE.Group();
+            mGroup.position.set(pos.x, pos.y, pos.z);
+            mGroup.rotation.y = pos.rotY;
 
-          // Screen with Rendered Candlesticks
-          const screenGeo = new THREE.PlaneGeometry(2.25, 1.4);
-          const tex = createMonitorCanvasTexture(false);
-          const screenMat = new THREE.MeshBasicMaterial({ map: tex });
-          const screen = new THREE.Mesh(screenGeo, screenMat);
-          screen.position.z = 0.05;
-          mGroup.add(screen);
+            const frameGeo = new THREE.BoxGeometry(2.35, 1.5, 0.08);
+            const frameMat = new THREE.MeshStandardMaterial({ color: 0x020617 });
+            mGroup.add(new THREE.Mesh(frameGeo, frameMat));
 
-          tradingRoomGroup.add(mGroup);
-        });
+            const screenGeo = new THREE.PlaneGeometry(2.25, 1.4);
+            const tex = createMonitorCanvasTexture(false);
+            const screenMat = new THREE.MeshBasicMaterial({ map: tex });
+            const screen = new THREE.Mesh(screenGeo, screenMat);
+            screen.position.z = 0.05;
+            mGroup.add(screen);
 
-        scene.add(tradingRoomGroup);
+            tradingRoomGroup.add(mGroup);
+          });
 
-        // 3. Floating Quantum Particles
-        const partGeo = new THREE.BufferGeometry();
-        const partCount = 450;
-        const posArray = new Float32Array(partCount * 3);
-        for (let i = 0; i < partCount * 3; i++) {
-          posArray[i] = (Math.random() - 0.5) * 35;
+          scene.add(tradingRoomGroup);
+
+          // Particles
+          const partGeo = new THREE.BufferGeometry();
+          const partCount = 450;
+          const posArray = new Float32Array(partCount * 3);
+          for (let i = 0; i < partCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 35;
+          }
+          partGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
+          const partMat = new THREE.PointsMaterial({ size: 0.06, color: 0x38bdf8, transparent: true, opacity: 0.6 });
+          particles = new THREE.Points(partGeo, partMat);
+          scene.add(particles);
+
+          animateThree();
+        } catch (err) {
+          console.warn("Three.js setup encountered a non-fatal warning:", err);
         }
-        partGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
-        const partMat = new THREE.PointsMaterial({ size: 0.06, color: 0x38bdf8, transparent: true, opacity: 0.6 });
-        particles = new THREE.Points(partGeo, partMat);
-        scene.add(particles);
-
-        animateThree();
       }
 
       function animateThree() {
@@ -871,33 +907,23 @@
           particles.rotation.y += 0.0006;
         }
 
-        camera.position.x += (targetCameraX - camera.position.x) * 0.05;
-        camera.position.y += (targetCameraY - camera.position.y) * 0.05;
-        camera.position.z += (targetCameraZ - camera.position.z) * 0.05;
-
-        renderer.render(scene, camera);
+        if (camera) {
+          camera.position.x += (targetCameraX - camera.position.x) * 0.05;
+          camera.position.y += (targetCameraY - camera.position.y) * 0.05;
+          camera.position.z += (targetCameraZ - camera.position.z) * 0.05;
+          renderer.render(scene, camera);
+        }
       }
 
       window.addEventListener("resize", () => {
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(window.innerWidth, window.innerHeight);
+        if (camera && renderer) {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        }
       });
 
-      function enterTradingRoom() {
-        if (introDone) return;
-        introDone = true;
-        document.getElementById("introOverlay").classList.add("fade-out");
-        targetCameraZ = 5.5;
-        targetCameraY = 0.5;
-        targetCameraX = 0;
-      }
-
-      document.getElementById("portalTrigger").addEventListener("click", enterTradingRoom);
-      document.getElementById("skipIntroBtn").addEventListener("click", enterTradingRoom);
-
       window.addEventListener("scroll", () => {
-        if (!introDone) enterTradingRoom();
         const scrollY = window.scrollY;
         const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
         const progress = Math.min(Math.max(scrollY / (maxScroll || 1), 0), 1);
@@ -912,23 +938,46 @@
       });
 
       /* ========================================================
-         2. REAL FINANCIAL NEWS & QUOTES INTEGRATION
+         2. FINANCIAL NEWS & QUOTES
          ======================================================== */
       async function fetchMarketNews() {
         const container = document.getElementById("newsFeedGrid");
-        container.innerHTML = `<div style="color:var(--text-muted); font-family:var(--font-mono);">Connecting to Financial Feeds...</div>`;
+        if (!container) return;
 
-        // Direct public CORS proxy to Yahoo Finance / MarketWatch RSS
-        const feeds = [
-          "https://api.allorigins.win/get?url=" + encodeURIComponent("https://finance.yahoo.com/news/rssindex")
-        ];
+        container.innerHTML = `
+          <article class="glass-card news-card">
+            <div>
+              <div class="news-card-time">POLICY • RATES</div>
+              <h3>Central Banks Signal Data-Driven Stance Across Liquidity Windows</h3>
+              <p>Global yields consolidate as institutional portfolios rotate into cyclical sectors with defensive order books.</p>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: REUTERS DESK</div>
+          </article>
+          <article class="glass-card news-card">
+            <div>
+              <div class="news-card-time">EQUITIES • MOMENTUM</div>
+              <h3>High-Beta Manufacturing Surges on Robust Capital Expenditure</h3>
+              <p>Heavyweight blue chips lead index momentum as domestic institutional inflows remain positive for consecutive weeks.</p>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: BLOOMBERG TERMINAL</div>
+          </article>
+          <article class="glass-card news-card">
+            <div>
+              <div class="news-card-time">COMMODITIES • ENERGY</div>
+              <h3>Crude Stabilizes in Narrow Channel, Easing Input Cost Pressures</h3>
+              <p>Manufacturing and logistics balance sheets benefit from stable margins amid normalized supply chain delivery times.</p>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: MARKETWATCH</div>
+          </article>
+        `;
 
+        // Attempt live fetch asynchronously
         try {
-          const res = await fetch(feeds[0]);
+          const res = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://finance.yahoo.com/news/rssindex"));
           const data = await res.json();
           const parser = new DOMParser();
           const xmlDoc = parser.parseFromString(data.contents, "text/xml");
-          const items = Array.from(xmlDoc.querySelectorAll("item")).slice(0, 6);
+          const items = Array.from(xmlDoc.querySelectorAll("item")).slice(0, 3);
 
           if (items.length > 0) {
             container.innerHTML = "";
@@ -945,46 +994,18 @@
                   <h3>${title}</h3>
                   <p>${desc}</p>
                 </div>
-                <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: GLOBAL FINANCIAL DISPATCH</div>
+                <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: YAHOO FINANCE LIVE</div>
               `;
               container.appendChild(card);
             });
-            return;
           }
         } catch (e) {
-          console.warn("Live RSS fallback active:", e);
+          // Keep the default informative cards if offline or blocked
         }
-
-        // Reliable Fallback Feed
-        container.innerHTML = `
-          <article class="glass-card news-card">
-            <div>
-              <div class="news-card-time">POLICY • RATES</div>
-              <h3>Central Banks Signal Data-Driven Stance Across Liquidity Windows</h3>
-              <p>Global yields consolidate as institutional portfolios rotate into cyclical sectors with defensive order books.</p>
-            </div>
-            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: REUTERS DESK</div>
-          </article>
-          <article class="glass-card news-card">
-            <div>
-              <div class="news-card-time">EQUITIES • MOMENTUM</div>
-              <h3>High-Beta Manufacturing Surges on Robust Capital Expenditure</h3>
-              <p>Heavyweight blue chips lead index momentum as domestic institutional inflows remain positive for the 5th consecutive week.</p>
-            </div>
-            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: BLOOMBERG TERMINAL</div>
-          </article>
-          <article class="glass-card news-card">
-            <div>
-              <div class="news-card-time">COMMODITIES • ENERGY</div>
-              <h3>Crude Stabilizes in Narrow Channel, Easing Input Cost Pressures</h3>
-              <p>Manufacturing and logistics balance sheets benefit from stable margins amid normalized supply chain delivery times.</p>
-            </div>
-            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: MARKETWATCH</div>
-          </article>
-        `;
       }
 
-      document.getElementById("btnRefreshNews").addEventListener("click", fetchMarketNews);
+      const refreshBtn = document.getElementById("btnRefreshNews");
+      if (refreshBtn) refreshBtn.addEventListener("click", fetchMarketNews);
 
       function updateLiveQuotes() {
         const nBase = 24950 + (Math.random() * 50 - 25);
@@ -992,10 +1013,15 @@
         const relBase = 2980 + (Math.random() * 12 - 6);
         const hdfcBase = 1684 + (Math.random() * 8 - 4);
 
-        document.getElementById("quoteNifty").innerText = nBase.toFixed(2);
-        document.getElementById("quoteBankNifty").innerText = bnBase.toFixed(2);
-        document.getElementById("quoteRel").innerText = relBase.toFixed(2);
-        document.getElementById("quoteHdfc").innerText = hdfcBase.toFixed(2);
+        const elN = document.getElementById("quoteNifty");
+        const elBN = document.getElementById("quoteBankNifty");
+        const elR = document.getElementById("quoteRel");
+        const elH = document.getElementById("quoteHdfc");
+
+        if (elN) elN.innerText = nBase.toFixed(2);
+        if (elBN) elBN.innerText = bnBase.toFixed(2);
+        if (elR) elR.innerText = relBase.toFixed(2);
+        if (elH) elH.innerText = hdfcBase.toFixed(2);
       }
       setInterval(updateLiveQuotes, 3000);
 
@@ -1006,10 +1032,11 @@
       let candles = [];
       let currentPrice = 24800;
       let accountBalance = 100000;
-      let activePosition = null; // { type: 'LONG'|'SHORT', entry: number, lots: number, sl: number, tp: number }
+      let activePosition = null;
 
       function initSimulatorEngine() {
         simCanvas = document.getElementById("simChartCanvas");
+        if (!simCanvas) return;
         simCtx = simCanvas.getContext("2d");
         resizeSimCanvas();
 
@@ -1028,19 +1055,18 @@
       }
 
       function resizeSimCanvas() {
-        if (!simCanvas) return;
+        if (!simCanvas || !simCanvas.parentElement) return;
         simCanvas.width = simCanvas.parentElement.clientWidth;
         simCanvas.height = simCanvas.parentElement.clientHeight;
       }
 
       function drawSimulatorChart() {
-        if (!simCtx) return;
+        if (!simCtx || !simCanvas) return;
         const width = simCanvas.width;
         const height = simCanvas.height;
 
         simCtx.clearRect(0, 0, width, height);
 
-        // Compute Min & Max bounds
         let minPrice = Infinity, maxPrice = -Infinity;
         candles.forEach(c => {
           if (c.low < minPrice) minPrice = c.low;
@@ -1063,17 +1089,14 @@
           simCtx.strokeStyle = isUp ? "#10b981" : "#f43f5e";
           simCtx.fillStyle = isUp ? "#10b981" : "#f43f5e";
 
-          // Wick
           simCtx.beginPath();
           simCtx.moveTo(x + candleWidth / 2, yHigh);
           simCtx.lineTo(x + candleWidth / 2, yLow);
           simCtx.stroke();
 
-          // Body
           simCtx.fillRect(x, Math.min(yOpen, yClose), candleWidth, Math.max(2, Math.abs(yClose - yOpen)));
         });
 
-        // Current Price Line
         const curY = height - ((currentPrice - minPrice) / range) * height;
         simCtx.strokeStyle = "rgba(56, 189, 248, 0.75)";
         simCtx.setLineDash([4, 4]);
@@ -1087,15 +1110,16 @@
       function tickSimulator() {
         const delta = (Math.random() - 0.49) * 4;
         currentPrice += delta;
-        document.getElementById("arenaPrice").innerText = currentPrice.toFixed(2);
+        const priceEl = document.getElementById("arenaPrice");
+        if (priceEl) priceEl.innerText = currentPrice.toFixed(2);
 
-        // Update the active candle
-        const last = candles[candles.length - 1];
-        last.close = currentPrice;
-        if (currentPrice > last.high) last.high = currentPrice;
-        if (currentPrice < last.low) last.low = currentPrice;
+        if (candles.length > 0) {
+          const last = candles[candles.length - 1];
+          last.close = currentPrice;
+          if (currentPrice > last.high) last.high = currentPrice;
+          if (currentPrice < last.low) last.low = currentPrice;
+        }
 
-        // Position P&L and Stop-Loss / Take-Profit Checks
         if (activePosition) {
           const diff = activePosition.type === "LONG" 
             ? currentPrice - activePosition.entry 
@@ -1103,43 +1127,46 @@
           
           const pnl = diff * activePosition.lots * 50;
           const pnlEl = document.getElementById("arenaPnl");
-          pnlEl.innerText = (pnl >= 0 ? "+$" : "-$") + Math.abs(pnl).toFixed(2);
-          pnlEl.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
-
-          // SL check
-          if (diff <= -activePosition.sl) {
-            closeTrade(`STOP LOSS HIT @ ${currentPrice.toFixed(2)} (P&L: -$${(activePosition.sl * activePosition.lots * 50).toFixed(2)})`);
+          if (pnlEl) {
+            pnlEl.innerText = (pnl >= 0 ? "+$" : "-$") + Math.abs(pnl).toFixed(2);
+            pnlEl.style.color = pnl >= 0 ? "var(--green)" : "var(--red)";
           }
-          // TP check
-          else if (diff >= activePosition.tp) {
-            closeTrade(`TAKE PROFIT HIT @ ${currentPrice.toFixed(2)} (P&L: +$${(activePosition.tp * activePosition.lots * 50).toFixed(2)})`);
+
+          if (diff <= -activePosition.sl) {
+            closeTrade(`STOP LOSS HIT @ ${currentPrice.toFixed(2)} (-$${(activePosition.sl * activePosition.lots * 50).toFixed(2)})`);
+          } else if (diff >= activePosition.tp) {
+            closeTrade(`TAKE PROFIT HIT @ ${currentPrice.toFixed(2)} (+$${(activePosition.tp * activePosition.lots * 50).toFixed(2)})`);
           }
         }
 
         drawSimulatorChart();
       }
 
-      // Roll new candle every 4 seconds
       setInterval(() => {
-        candles.shift();
-        candles.push({
-          open: currentPrice,
-          high: currentPrice,
-          low: currentPrice,
-          close: currentPrice
-        });
+        if (candles.length > 0) {
+          candles.shift();
+          candles.push({
+            open: currentPrice,
+            high: currentPrice,
+            low: currentPrice,
+            close: currentPrice
+          });
+        }
       }, 4000);
 
       setInterval(tickSimulator, 800);
 
       function openTrade(type) {
-        const lots = parseInt(document.getElementById("tradeLots").value) || 1;
-        const sl = parseFloat(document.getElementById("tradeSL").value) || 25;
-        const tp = parseFloat(document.getElementById("tradeTP").value) || 50;
+        const lots = parseInt(document.getElementById("tradeLots")?.value) || 1;
+        const sl = parseFloat(document.getElementById("tradeSL")?.value) || 25;
+        const tp = parseFloat(document.getElementById("tradeTP")?.value) || 50;
 
         activePosition = { type, entry: currentPrice, lots, sl, tp };
-        document.getElementById("arenaFeedback").innerText = `ACTIVE ${type} (${lots} LOTS) @ ${currentPrice.toFixed(2)}`;
-        document.getElementById("arenaFeedback").style.color = type === "LONG" ? "var(--green)" : "var(--red)";
+        const fb = document.getElementById("arenaFeedback");
+        if (fb) {
+          fb.innerText = `ACTIVE ${type} (${lots} LOTS) @ ${currentPrice.toFixed(2)}`;
+          fb.style.color = type === "LONG" ? "var(--green)" : "var(--red)";
+        }
       }
 
       function closeTrade(reason) {
@@ -1150,17 +1177,29 @@
         const realized = diff * activePosition.lots * 50;
 
         accountBalance += realized;
-        document.getElementById("arenaBalance").innerText = "$" + accountBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
-        document.getElementById("arenaPnl").innerText = "$0.00";
-        document.getElementById("arenaPnl").style.color = "var(--text-muted)";
-        document.getElementById("arenaFeedback").innerText = reason || `CLOSED @ ${currentPrice.toFixed(2)} (P&L: ${realized >= 0 ? "+$" : "-$"}${Math.abs(realized).toFixed(2)})`;
-        document.getElementById("arenaFeedback").style.color = "var(--text-muted)";
+        const balEl = document.getElementById("arenaBalance");
+        const pnlEl = document.getElementById("arenaPnl");
+        const fbEl = document.getElementById("arenaFeedback");
+
+        if (balEl) balEl.innerText = "$" + accountBalance.toLocaleString(undefined, { minimumFractionDigits: 2 });
+        if (pnlEl) {
+          pnlEl.innerText = "$0.00";
+          pnlEl.style.color = "var(--text-muted)";
+        }
+        if (fbEl) {
+          fbEl.innerText = reason || `CLOSED @ ${currentPrice.toFixed(2)} (P&L: ${realized >= 0 ? "+$" : "-$"}${Math.abs(realized).toFixed(2)})`;
+          fbEl.style.color = "var(--text-muted)";
+        }
         activePosition = null;
       }
 
-      document.getElementById("btnLong").addEventListener("click", () => openTrade("LONG"));
-      document.getElementById("btnShort").addEventListener("click", () => openTrade("SHORT"));
-      document.getElementById("btnClosePos").addEventListener("click", () => closeTrade("POSITION FLATTENED BY USER"));
+      const btnLong = document.getElementById("btnLong");
+      const btnShort = document.getElementById("btnShort");
+      const btnClose = document.getElementById("btnClosePos");
+
+      if (btnLong) btnLong.addEventListener("click", () => openTrade("LONG"));
+      if (btnShort) btnShort.addEventListener("click", () => openTrade("SHORT"));
+      if (btnClose) btnClose.addEventListener("click", () => closeTrade("POSITION FLATTENED"));
 
       /* ========================================================
          4. DIAGNOSTICS QUIZ & CHART DETECTIVE
@@ -1174,23 +1213,4 @@
             { text: "Quickly flip short to capture the breakdown momentum.", type: "scalper" }
           ]
         },
-        {
-          q: "Your defining benchmark for performance consistency is:",
-          options: [
-            { text: "Strict adherence to trade management parameters across 100 setups.", type: "systematic" },
-            { text: "Capitalizing aggressively on hot thematic sector rotations.", type: "scalper" },
-            { text: "Long-term compounding based on underlying earnings resilience.", type: "value" }
-          ]
-        }
-      ];
-
-      let currentQuizIdx = 0;
-      let quizScores = { systematic: 0, scalper: 0, value: 0 };
-
-      function renderQuiz() {
-        if (currentQuizIdx >= quizQuestions.length) {
-          showQuizResult();
-          return;
-        }
-        const data = quizQuestions[currentQuizIdx];
-    
+       
