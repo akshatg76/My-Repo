@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap"
       rel="stylesheet"
     />
     <style>
@@ -21,10 +21,11 @@
         --text-secondary: #94a3b8;
         --text-muted: #64748b;
         --cyan: #38bdf8;
-        --cyan-glow: rgba(56, 189, 248, 0.35);
+        --cyan-glow: rgba(56, 189, 248, 0.4);
         --blue-accent: #2563eb;
         --green: #10b981;
         --red: #f43f5e;
+        --gold: #f59e0b;
         --header-bg: rgba(3, 7, 18, 0.88);
         --chart-bg: #020617;
         --font-sans: "Plus Jakarta Sans", sans-serif;
@@ -84,60 +85,128 @@
         z-index: 10;
       }
 
-      /* PORTAL OVERLAY */
+      /* =========================================
+         ASTRONOMICAL PORTAL & COUNTDOWN OVERLAY
+         ========================================= */
       #introOverlay {
         position: fixed;
         inset: 0;
-        background: radial-gradient(circle at center, #07172f 0%, #020617 85%);
+        background: #01040a;
         z-index: 999999;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        transition: opacity 0.6s ease, visibility 0.6s ease;
+        overflow: hidden;
+        transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), transform 1s cubic-bezier(0.16, 1, 0.3, 1);
       }
 
-      .portal-core {
+      #introOverlay.warp-exit {
+        opacity: 0 !important;
+        transform: scale(2.2) !important;
+        pointer-events: none !important;
+      }
+
+      #cosmicCanvas {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+      }
+
+      .portal-ui-layer {
         position: relative;
-        width: 220px;
-        height: 220px;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        pointer-events: auto;
+      }
+
+      .singularity-trigger {
+        position: relative;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        cursor: pointer;
         display: flex;
         align-items: center;
         justify-content: center;
-        cursor: pointer;
+        transition: transform 0.4s ease;
       }
 
-      .portal-ring {
+      .singularity-trigger:hover {
+        transform: scale(1.06);
+      }
+
+      .portal-inner-glow {
+        position: absolute;
+        width: 140px;
+        height: 140px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(56, 189, 248, 0.4) 0%, rgba(37, 99, 235, 0.1) 60%, transparent 80%);
+        box-shadow: 0 0 60px var(--cyan-glow), inset 0 0 40px rgba(56, 189, 248, 0.6);
+        animation: pulseCore 2.5s ease-in-out infinite alternate;
+      }
+
+      @keyframes pulseCore {
+        0% { transform: scale(0.9); opacity: 0.6; }
+        100% { transform: scale(1.15); opacity: 1; filter: drop-shadow(0 0 25px #38bdf8); }
+      }
+
+      .portal-prompt {
+        position: relative;
+        font-family: var(--font-mono);
+        font-size: 0.82rem;
+        letter-spacing: 0.28em;
+        text-transform: uppercase;
+        color: #e0f2fe;
+        text-shadow: 0 0 16px var(--cyan);
+        pointer-events: none;
+        z-index: 5;
+      }
+
+      /* COUNTDOWN HUD */
+      #countdownHud {
+        display: none;
         position: absolute;
         inset: 0;
-        border-radius: 50%;
-        border: 2px solid transparent;
-        border-top-color: var(--cyan);
-        border-bottom-color: var(--blue-accent);
-        animation: spinPortal 3s linear infinite;
-        box-shadow: 0 0 35px var(--cyan-glow);
-      }
-
-      .portal-ring:nth-child(2) {
-        inset: 14px;
-        animation: spinPortal 5s linear infinite reverse;
-        border-left-color: #f59e0b;
-        border-right-color: var(--cyan);
-      }
-
-      .portal-text {
-        font-family: var(--font-mono);
-        font-size: 0.85rem;
-        letter-spacing: 0.25em;
-        text-transform: uppercase;
-        color: var(--cyan);
-        text-shadow: 0 0 12px var(--cyan);
-        text-align: center;
+        z-index: 20;
         pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
-      @keyframes spinPortal { 100% { transform: rotate(360deg); } }
+      .countdown-number {
+        font-family: var(--font-mono);
+        font-size: clamp(5rem, 15vw, 11rem);
+        font-weight: 800;
+        letter-spacing: -0.04em;
+        background: linear-gradient(180deg, #ffffff 20%, var(--cyan) 70%, var(--blue-accent) 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 50px var(--cyan-glow);
+        transform: scale(0.5);
+        opacity: 0;
+        animation: zoomBurst 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      }
 
+      @keyframes zoomBurst {
+        0% { transform: scale(0.4); opacity: 0; filter: blur(12px); }
+        40% { transform: scale(1.12); opacity: 1; filter: blur(0px); }
+        85% { transform: scale(1); opacity: 1; filter: blur(0px); }
+        100% { transform: scale(1.4); opacity: 0; filter: blur(16px); }
+      }
+
+      .portal-footer-skip {
+        margin-top: 40px;
+        z-index: 10;
+      }
+
+      /* Header & Cards */
       .glass-card {
         background: var(--bg-card);
         backdrop-filter: blur(20px);
@@ -350,39 +419,35 @@
     </style>
   </head>
   <body>
-    <!-- WebGL Background Canvas -->
+    <!-- Persistent WebGL Workstation Canvas -->
     <canvas id="webgl-canvas"></canvas>
     <div class="cinematic-vignette"></div>
 
-    <!-- Opening Portal Overlay with Immediate Click Handlers -->
+    <!-- ==============================================
+         ASTRONOMICAL WORMHOLE STAGE & CHANT COUNTDOWN
+         ============================================== -->
     <div id="introOverlay">
-      <div class="portal-core" onclick="forceUnlockPortal()">
-        <div class="portal-ring"></div>
-        <div class="portal-ring"></div>
-        <div class="portal-text">CLICK TO<br />ENTER</div>
+      <!-- 2D Gravitational Lensing Canvas -->
+      <canvas id="cosmicCanvas"></canvas>
+
+      <!-- Center Singularity Trigger -->
+      <div class="portal-ui-layer" id="portalUi">
+        <div class="singularity-trigger" onclick="startCountdownSequence()">
+          <div class="portal-inner-glow"></div>
+          <div class="portal-prompt">INITIATE<br />WARP</div>
+        </div>
+        <div class="portal-footer-skip">
+          <button class="btn btn-ghost" onclick="forceUnlockPortal()" style="font-size: 0.8rem; padding: 8px 20px;">
+            Skip Intro &gt;
+          </button>
+        </div>
       </div>
-      <div style="margin-top: 36px; text-align: center;">
-        <button class="btn btn-ghost" onclick="forceUnlockPortal()" style="font-size: 0.85rem; padding: 10px 24px;">
-          Skip Intro Sequence &gt;
-        </button>
-      </div>
+
+      <!-- Explosive Countdown HUD -->
+      <div id="countdownHud"></div>
     </div>
 
-    <!-- Fallback instant dismiss script -->
-    <script>
-      function forceUnlockPortal() {
-        const overlay = document.getElementById("introOverlay");
-        if (overlay) {
-          overlay.style.opacity = "0";
-          overlay.style.pointerEvents = "none";
-          setTimeout(function() { overlay.style.display = "none"; }, 500);
-        }
-      }
-      // Auto-unlock safeguard after 2.5 seconds
-      setTimeout(forceUnlockPortal, 2500);
-    </script>
-
-    <!-- Navigation Header -->
+    <!-- Sticky Navigation Header -->
     <header>
       <div class="container nav-inner">
         <a href="#hero" class="brand">
@@ -649,12 +714,221 @@
         </div>
       </div>
     </section>
-    <!-- Asynchronously loads Three.js so it NEVER blocks the page -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
     <script>
       /* ========================================================
-         1. SAFE THREE.JS WORKSTATION SCENE
+         1. REALISTIC ASTRONOMICAL WORMHOLE CANVAS
+         ======================================================== */
+      const cCanvas = document.getElementById("cosmicCanvas");
+      const cCtx = cCanvas.getContext("2d");
+      let cW, cH, cStars = [], cNebulaAngle = 0;
+      let warpSpeed = 1;
+
+      function resizeCosmic() {
+        cW = cCanvas.width = window.innerWidth;
+        cH = cCanvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeCosmic);
+      resizeCosmic();
+
+      // Generate 400 astronomical stars and dust points
+      for (let i = 0; i < 400; i++) {
+        cStars.push({
+          x: (Math.random() - 0.5) * cW * 1.5,
+          y: (Math.random() - 0.5) * cH * 1.5,
+          z: Math.random() * cW,
+          size: Math.random() * 2 + 0.5,
+          color: Math.random() > 0.4 ? "#38bdf8" : (Math.random() > 0.5 ? "#f59e0b" : "#ffffff")
+        });
+      }
+
+      function drawCosmicWormhole() {
+        cCtx.fillStyle = "rgba(1, 4, 10, 0.28)";
+        cCtx.fillRect(0, 0, cW, cH);
+
+        const cx = cW / 2;
+        const cy = cH / 2;
+
+        // 1. Accretion Disk / Gravitational Lensing Rings
+        cNebulaAngle += 0.015 * warpSpeed;
+        for (let r = 70; r < 240; r += 28) {
+          cCtx.save();
+          cCtx.translate(cx, cy);
+          cCtx.rotate(cNebulaAngle * (r % 2 === 0 ? 1 : -0.8));
+          cCtx.beginPath();
+          cCtx.ellipse(0, 0, r * 1.3, r * 0.75, cNebulaAngle * 0.2, 0, Math.PI * 2);
+          cCtx.strokeStyle = r > 160 ? "rgba(56, 189, 248, 0.14)" : "rgba(245, 158, 11, 0.2)";
+          cCtx.lineWidth = Math.max(1, 4 - r / 60);
+          cCtx.stroke();
+          cCtx.restore();
+        }
+
+        // 2. Stars Gravitational Pull toward Singularity
+        for (let i = 0; i < cStars.length; i++) {
+          const s = cStars[i];
+          s.z -= 4 * warpSpeed;
+
+          if (s.z <= 0) {
+            s.z = cW;
+            s.x = (Math.random() - 0.5) * cW * 1.5;
+            s.y = (Math.random() - 0.5) * cH * 1.5;
+          }
+
+          const k = 250 / s.z;
+          const px = s.x * k + cx;
+          const py = s.y * k + cy;
+
+          if (px >= 0 && px <= cW && py >= 0 && py <= cH) {
+            const sz = Math.max(0.1, (1 - s.z / cW) * s.size * 2);
+            cCtx.beginPath();
+            cCtx.arc(px, py, sz, 0, Math.PI * 2);
+            cCtx.fillStyle = s.color;
+            cCtx.fill();
+
+            // Warp streak trails during acceleration
+            if (warpSpeed > 2) {
+              cCtx.beginPath();
+              cCtx.moveTo(px, py);
+              cCtx.lineTo(px - (px - cx) * 0.08 * warpSpeed, py - (py - cy) * 0.08 * warpSpeed);
+              cCtx.strokeStyle = s.color;
+              cCtx.lineWidth = sz;
+              cCtx.stroke();
+            }
+          }
+        }
+
+        // 3. Central Event Horizon (Pitch-black center with glowing corona)
+        const radGrad = cCtx.createRadialGradient(cx, cy, 30, cx, cy, 110);
+        radGrad.addColorStop(0, "#000000");
+        radGrad.addColorStop(0.5, "rgba(2, 6, 23, 0.95)");
+        radGrad.addColorStop(0.8, "rgba(56, 189, 248, 0.4)");
+        radGrad.addColorStop(1, "transparent");
+
+        cCtx.beginPath();
+        cCtx.arc(cx, cy, 110, 0, Math.PI * 2);
+        cCtx.fillStyle = radGrad;
+        cCtx.fill();
+
+        if (document.getElementById("introOverlay").style.display !== "none") {
+          requestAnimationFrame(drawCosmicWormhole);
+        }
+      }
+      drawCosmicWormhole();
+
+      /* ========================================================
+         2. NATIVE COSMIC HARMONIC CHANT & AUDIO SYNTHESIZER
+         ======================================================== */
+      let audioCtx = null;
+
+      function playCosmicChantSound(type) {
+        try {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (!AudioContext) return;
+          if (!audioCtx) audioCtx = new AudioContext();
+          if (audioCtx.state === "suspended") audioCtx.resume();
+
+          const now = audioCtx.currentTime;
+
+          if (type === "step") {
+            // Resonant Harmonic Tibetan-Style Throat Chant Chord
+            const freqs = [108, 216, 324]; // Sacred harmonic ratios
+            freqs.forEach((freq, idx) => {
+              const osc = audioCtx.createOscillator();
+              const gain = audioCtx.createGain();
+              osc.type = idx === 0 ? "sawtooth" : "sine";
+              osc.frequency.setValueAtTime(freq, now);
+
+              // Low-pass filter for deep throat resonance
+              const filter = audioCtx.createBiquadFilter();
+              filter.type = "lowpass";
+              filter.frequency.setValueAtTime(450, now);
+
+              gain.gain.setValueAtTime(0, now);
+              gain.gain.linearRampToValueAtTime(0.25 / (idx + 1), now + 0.15);
+              gain.gain.exponentialRampToValueAtTime(0.001, now + 0.85);
+
+              osc.connect(filter);
+              filter.connect(gain);
+              gain.connect(audioCtx.destination);
+
+              osc.start(now);
+              osc.stop(now + 0.9);
+            });
+          } else if (type === "launch") {
+            // Massive Sub-bass Cosmic Riser + Shimmer Boom
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = "sawtooth";
+            osc.frequency.setValueAtTime(65, now);
+            osc.frequency.exponentialRampToValueAtTime(880, now + 1.2);
+
+            gain.gain.setValueAtTime(0.4, now);
+            gain.gain.exponentialRampToValueAtTime(0.001, now + 1.4);
+
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start(now);
+            osc.stop(now + 1.4);
+          }
+        } catch(e) {
+          // Audio autoplay safe catch
+        }
+      }
+
+      /* ========================================================
+         3. 3-2-1 "LET'S GO!" COUNTDOWN & WARP SEQUENCE
+         ======================================================== */
+      let countdownActive = false;
+
+      function startCountdownSequence() {
+        if (countdownActive) return;
+        countdownActive = true;
+
+        // Hide portal trigger
+        document.getElementById("portalUi").style.display = "none";
+
+        const hud = document.getElementById("countdownHud");
+        hud.style.display = "flex";
+
+        const sequence = [
+          { text: "3", sound: "step", speed: 2 },
+          { text: "2", sound: "step", speed: 4 },
+          { text: "1", sound: "step", speed: 7 },
+          { text: "LET'S GO!", sound: "launch", speed: 18 }
+        ];
+
+        let index = 0;
+
+        function runStep() {
+          if (index < sequence.length) {
+            const current = sequence[index];
+            hud.innerHTML = `<div class="countdown-number">${current.text}</div>`;
+            warpSpeed = current.speed;
+            playCosmicChantSound(current.sound);
+
+            index++;
+            setTimeout(runStep, 950);
+          } else {
+            // Execute warp jump into workstation
+            forceUnlockPortal();
+          }
+        }
+        runStep();
+      }
+
+      function forceUnlockPortal() {
+        const overlay = document.getElementById("introOverlay");
+        if (overlay) {
+          overlay.classList.add("warp-exit");
+          setTimeout(() => {
+            overlay.style.display = "none";
+          }, 900);
+        }
+      }
+
+      /* ========================================================
+         4. THREE.JS 3D TRADING CHAMBER WORKSTATION
          ======================================================== */
       let scene, camera, renderer, tradingRoomGroup;
 
@@ -707,13 +981,11 @@
             renderer.render(scene, camera);
           }
           render();
-        } catch(e) {
-          console.log("3D canvas loaded in standard fallback mode.");
-        }
+        } catch(e) {}
       }
 
       /* ========================================================
-         2. LIVE 2D CANDLESTICK TRADING SIMULATOR
+         5. CANDLESTICK SIMULATOR ENGINE
          ======================================================== */
       let simCanvas, simCtx;
       let candles = [];
@@ -725,7 +997,7 @@
         simCanvas = document.getElementById("simChartCanvas");
         if (!simCanvas) return;
         simCtx = simCanvas.getContext("2d");
-        resizeCanvas();
+        resizeSimCanvas();
 
         let base = 24800;
         for (let i = 0; i < 40; i++) {
@@ -741,7 +1013,7 @@
         drawChart();
       }
 
-      function resizeCanvas() {
+      function resizeSimCanvas() {
         if (!simCanvas || !simCanvas.parentElement) return;
         simCanvas.width = simCanvas.parentElement.clientWidth;
         simCanvas.height = simCanvas.parentElement.clientHeight;
@@ -783,7 +1055,6 @@
           simCtx.fillRect(x, Math.min(yOpen, yClose), cWidth, Math.max(2, Math.abs(yClose - yOpen)));
         });
 
-        // Price Dash Line
         const curY = h - ((currentPrice - minPrice) / range) * h;
         simCtx.strokeStyle = "rgba(56, 189, 248, 0.75)";
         simCtx.setLineDash([4, 4]);
@@ -885,7 +1156,7 @@
       document.getElementById("btnClosePos")?.addEventListener("click", () => closeTrade("POSITION FLATTENED"));
 
       /* ========================================================
-         3. QUIZ & DETECTIVE LOGIC
+         6. QUIZ & DETECTIVE
          ======================================================== */
       const quizQuestions = [
         {
@@ -962,7 +1233,7 @@
       }
 
       /* ========================================================
-         4. THEME TOGGLER & INIT
+         7. THEME TOGGLER & INIT
          ======================================================== */
       document.getElementById("themeToggle")?.addEventListener("click", () => {
         document.body.classList.toggle("light");
@@ -976,7 +1247,7 @@
         renderQuiz();
         initSimulatorEngine();
         window.addEventListener("resize", () => {
-          resizeCanvas();
+          resizeSimCanvas();
           drawChart();
         });
       });
