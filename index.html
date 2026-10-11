@@ -4,82 +4,65 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>The 19th Trader | Elite Market Intelligence & Simulation</title>
-    <meta
-      name="description"
-      content="Immersive 3D trading education, live market analytics, and interactive execution engine."
-    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
       rel="stylesheet"
     />
-    <!-- Three.js 3D WebGL Library -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-
     <style>
       :root {
         --bg-deep: #030712;
-        --bg-surface: rgba(11, 19, 38, 0.75);
-        --bg-panel: rgba(15, 23, 42, 0.85);
-        --bg-card: rgba(17, 27, 49, 0.75);
-        --bg-card-subtle: rgba(255, 255, 255, 0.04);
+        --bg-card: rgba(17, 27, 49, 0.78);
+        --bg-subtle: rgba(255, 255, 255, 0.04);
         --border-glass: rgba(56, 189, 248, 0.22);
-        --border-subtle: rgba(255, 255, 255, 0.1);
+        --border-subtle: rgba(255, 255, 255, 0.08);
         --text-primary: #f8fafc;
         --text-secondary: #94a3b8;
         --text-muted: #64748b;
         --cyan: #38bdf8;
         --cyan-glow: rgba(56, 189, 248, 0.35);
         --blue-accent: #2563eb;
-        --gold: #f59e0b;
         --green: #10b981;
         --red: #f43f5e;
-        --header-bg: rgba(3, 7, 18, 0.85);
+        --header-bg: rgba(3, 7, 18, 0.88);
         --chart-bg: #020617;
-        --panel-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.5), 0 0 30px rgba(14, 165, 233, 0.06);
         --font-sans: "Plus Jakarta Sans", sans-serif;
         --font-mono: "JetBrains Mono", monospace;
       }
 
       body.light {
         --bg-deep: #f1f5f9;
-        --bg-surface: rgba(255, 255, 255, 0.95);
-        --bg-panel: #ffffff;
         --bg-card: #ffffff;
-        --bg-card-subtle: rgba(15, 23, 42, 0.05);
+        --bg-subtle: rgba(15, 23, 42, 0.05);
         --border-glass: rgba(37, 99, 235, 0.25);
         --border-subtle: rgba(15, 23, 42, 0.12);
         --text-primary: #0f172a;
         --text-secondary: #334155;
         --text-muted: #64748b;
         --cyan: #0284c7;
-        --cyan-glow: rgba(2, 132, 199, 0.18);
+        --cyan-glow: rgba(2, 132, 199, 0.2);
         --blue-accent: #1d4ed8;
-        --header-bg: rgba(241, 245, 249, 0.92);
+        --header-bg: rgba(241, 245, 249, 0.95);
         --chart-bg: #f8fafc;
-        --panel-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
       }
 
       * { box-sizing: border-box; margin: 0; padding: 0; }
-      html { scroll-behavior: smooth; background-color: var(--bg-deep); }
+      html { scroll-behavior: smooth; background: var(--bg-deep); }
       body {
         font-family: var(--font-sans);
         color: var(--text-primary);
-        background: transparent;
         line-height: 1.6;
-        overflow-x: hidden;
         min-height: 100vh;
+        overflow-x: hidden;
         transition: background 0.3s ease, color 0.3s ease;
       }
 
       #webgl-canvas {
         position: fixed;
-        top: 0;
-        left: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: -1;
+        top: 0; left: 0;
+        width: 100vw; height: 100vh;
+        z-index: 0;
         pointer-events: none;
       }
 
@@ -87,11 +70,11 @@
         position: fixed;
         inset: 0;
         pointer-events: none;
-        background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(3, 7, 18, 0.85) 100%);
-        z-index: 0;
+        background: radial-gradient(circle at 50% 50%, transparent 45%, rgba(3, 7, 18, 0.82) 100%);
+        z-index: 1;
       }
       body.light .cinematic-vignette {
-        background: radial-gradient(circle at 50% 50%, transparent 50%, rgba(241, 245, 249, 0.7) 100%);
+        background: radial-gradient(circle at 50% 50%, transparent 50%, rgba(241, 245, 249, 0.72) 100%);
       }
 
       .container {
@@ -101,23 +84,17 @@
         z-index: 10;
       }
 
-      /* Portal Overlay */
+      /* PORTAL OVERLAY */
       #introOverlay {
         position: fixed;
         inset: 0;
         background: radial-gradient(circle at center, #07172f 0%, #020617 85%);
-        z-index: 99999;
+        z-index: 999999;
         display: flex;
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        transition: opacity 0.8s ease, visibility 0.8s ease;
-      }
-
-      #introOverlay.fade-out {
-        opacity: 0 !important;
-        visibility: hidden !important;
-        pointer-events: none !important;
+        transition: opacity 0.6s ease, visibility 0.6s ease;
       }
 
       .portal-core {
@@ -128,7 +105,6 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        user-select: none;
       }
 
       .portal-ring {
@@ -139,13 +115,13 @@
         border-top-color: var(--cyan);
         border-bottom-color: var(--blue-accent);
         animation: spinPortal 3s linear infinite;
-        box-shadow: 0 0 40px var(--cyan-glow);
+        box-shadow: 0 0 35px var(--cyan-glow);
       }
 
       .portal-ring:nth-child(2) {
-        inset: 16px;
+        inset: 14px;
         animation: spinPortal 5s linear infinite reverse;
-        border-left-color: var(--gold);
+        border-left-color: #f59e0b;
         border-right-color: var(--cyan);
       }
 
@@ -156,7 +132,6 @@
         text-transform: uppercase;
         color: var(--cyan);
         text-shadow: 0 0 12px var(--cyan);
-        z-index: 2;
         text-align: center;
         pointer-events: none;
       }
@@ -169,13 +144,8 @@
         -webkit-backdrop-filter: blur(20px);
         border: 1px solid var(--border-glass);
         border-radius: 20px;
-        box-shadow: var(--panel-shadow);
-        transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-      }
-
-      .glass-card:hover {
-        border-color: var(--cyan);
-        box-shadow: var(--panel-shadow), 0 0 25px var(--cyan-glow);
+        box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        transition: border-color 0.25s ease, box-shadow 0.25s ease;
       }
 
       header {
@@ -186,7 +156,6 @@
         -webkit-backdrop-filter: blur(16px);
         background: var(--header-bg);
         border-bottom: 1px solid var(--border-subtle);
-        transition: background 0.3s ease;
       }
 
       .nav-inner {
@@ -204,20 +173,16 @@
         color: var(--text-primary);
         font-weight: 800;
         font-size: 1.15rem;
-        letter-spacing: -0.02em;
       }
 
       .brand-badge {
-        width: 38px;
-        height: 38px;
+        width: 38px; height: 38px;
         background: linear-gradient(135deg, var(--cyan), var(--blue-accent));
         border-radius: 10px;
         display: grid;
         place-items: center;
         color: #fff;
         font-weight: 800;
-        font-size: 0.95rem;
-        box-shadow: 0 0 15px var(--cyan-glow);
       }
 
       .nav-links { display: flex; gap: 24px; }
@@ -226,45 +191,40 @@
         color: var(--text-secondary);
         font-size: 0.88rem;
         font-weight: 600;
-        transition: color 0.2s ease;
       }
       .nav-links a:hover { color: var(--cyan); }
-      .nav-actions { display: flex; align-items: center; gap: 14px; }
 
       .btn {
         display: inline-flex;
         align-items: center;
         justify-content: center;
-        gap: 8px;
         padding: 10px 20px;
         border-radius: 12px;
         font-size: 0.88rem;
         font-weight: 700;
         cursor: pointer;
         border: 1px solid transparent;
-        transition: all 0.2s ease;
         text-decoration: none;
+        transition: transform 0.15s ease;
       }
+      .btn:hover { transform: translateY(-2px); }
 
       .btn-primary {
         background: linear-gradient(135deg, var(--cyan), var(--blue-accent));
         color: #ffffff !important;
-        box-shadow: 0 4px 18px var(--cyan-glow);
       }
-      .btn-primary:hover { transform: translateY(-2px); }
 
       .btn-ghost {
-        background: var(--bg-card-subtle);
+        background: var(--bg-subtle);
         border: 1px solid var(--border-subtle);
         color: var(--text-primary);
       }
-      .btn-ghost:hover { border-color: var(--cyan); background: var(--border-glass); }
 
       .theme-btn {
         width: 40px; height: 40px;
         border-radius: 10px;
         border: 1px solid var(--border-subtle);
-        background: var(--bg-card-subtle);
+        background: var(--bg-subtle);
         color: var(--text-primary);
         cursor: pointer;
         display: grid;
@@ -285,72 +245,35 @@
       .section-badge {
         display: inline-flex;
         align-items: center;
-        gap: 6px;
         padding: 6px 14px;
         border-radius: 999px;
         font-size: 0.72rem;
         text-transform: uppercase;
         font-weight: 700;
         letter-spacing: 0.1em;
-        background: rgba(56, 189, 248, 0.1);
+        background: rgba(56, 189, 248, 0.12);
         color: var(--cyan);
         border: 1px solid var(--border-glass);
         margin-bottom: 16px;
       }
 
-      h1, h2, h3, h4 { color: var(--text-primary); letter-spacing: -0.03em; font-weight: 800; }
       h1 { font-size: clamp(2.8rem, 5.5vw, 4.6rem); line-height: 1.05; margin-bottom: 24px; }
       h2 { font-size: clamp(2rem, 3.8vw, 3rem); line-height: 1.15; margin-bottom: 16px; }
       .lead { font-size: 1.1rem; color: var(--text-secondary); max-width: 620px; margin-bottom: 32px; }
 
       .hero-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 48px; align-items: center; }
-      .terminal-preview { padding: 24px; font-family: var(--font-mono); }
-      .terminal-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        border-bottom: 1px solid var(--border-subtle);
-        padding-bottom: 14px;
-        margin-bottom: 16px;
-      }
-      .terminal-dots { display: flex; gap: 6px; }
-      .dot { width: 10px; height: 10px; border-radius: 50%; }
-      .dot.red { background: var(--red); }
-      .dot.yellow { background: var(--gold); }
-      .dot.green { background: var(--green); }
-
       .ticker-strip { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-top: 14px; }
       .ticker-box {
         padding: 12px;
         border-radius: 12px;
-        background: var(--bg-card-subtle);
+        background: var(--bg-subtle);
         border: 1px solid var(--border-subtle);
       }
-      .ticker-box span { font-size: 0.75rem; color: var(--text-muted); display: block; font-weight: 600; }
-      .ticker-box strong { font-size: 1.25rem; color: var(--text-primary); }
+      .ticker-box strong { font-size: 1.25rem; font-family: var(--font-mono); }
 
-      .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 24px; margin-top: 36px; }
+      .news-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-top: 32px; }
       .news-card { padding: 26px; display: flex; flex-direction: column; justify-content: space-between; }
       .news-card-time { font-size: 0.72rem; color: var(--cyan); font-family: var(--font-mono); font-weight: 700; margin-bottom: 8px; }
-      .news-card h3 { font-size: 1.15rem; line-height: 1.4; margin-bottom: 12px; color: var(--text-primary); }
-      .news-card p { font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 20px; }
-
-      .quiz-container { padding: 36px; max-width: 820px; margin: 30px auto 0; }
-      .quiz-question { font-size: 1.35rem; font-weight: 700; margin-bottom: 24px; color: var(--text-primary); }
-      .quiz-options { display: grid; gap: 12px; }
-      .quiz-btn {
-        text-align: left;
-        padding: 16px 20px;
-        border-radius: 14px;
-        background: var(--bg-card-subtle);
-        border: 1px solid var(--border-subtle);
-        color: var(--text-primary);
-        cursor: pointer;
-        font-size: 0.95rem;
-        font-weight: 600;
-        transition: all 0.2s ease;
-      }
-      .quiz-btn:hover { background: rgba(56, 189, 248, 0.1); border-color: var(--cyan); transform: translateX(6px); }
 
       .arena-shell { display: grid; grid-template-columns: 1fr 340px; gap: 24px; margin-top: 36px; }
       .arena-board { padding: 24px; }
@@ -358,22 +281,20 @@
         background: var(--chart-bg);
         border: 1px solid var(--border-subtle);
         border-radius: 14px;
-        padding: 10px;
         height: 280px;
         position: relative;
         overflow: hidden;
       }
       .candlestick-canvas { width: 100%; height: 100%; display: block; }
       .arena-controls { display: flex; flex-direction: column; gap: 14px; padding: 24px; }
-      .control-row { display: flex; gap: 10px; align-items: center; justify-content: space-between; }
+      .control-row { display: flex; justify-content: space-between; align-items: center; }
       .control-input {
-        background: var(--bg-card-subtle);
+        background: var(--bg-subtle);
         border: 1px solid var(--border-subtle);
         color: var(--text-primary);
         padding: 8px 12px;
         border-radius: 8px;
         font-family: var(--font-mono);
-        font-size: 0.88rem;
         width: 100px;
         text-align: right;
       }
@@ -383,55 +304,44 @@
         align-items: center;
         padding: 10px 14px;
         border-radius: 10px;
-        background: var(--bg-card-subtle);
+        background: var(--bg-subtle);
         border: 1px solid var(--border-subtle);
       }
 
-      .detective-card { padding: 32px; margin-top: 36px; }
-      .chart-challenge { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 32px; align-items: center; }
-      .chart-viewport {
-        background: var(--chart-bg);
-        border: 1px solid var(--border-glass);
-        border-radius: 16px;
-        height: 320px;
-        padding: 16px;
+      .quiz-container { padding: 36px; max-width: 820px; margin: 30px auto 0; }
+      .quiz-question { font-size: 1.35rem; font-weight: 700; margin-bottom: 24px; }
+      .quiz-options { display: grid; gap: 12px; }
+      .quiz-btn {
+        text-align: left;
+        padding: 16px 20px;
+        border-radius: 14px;
+        background: var(--bg-subtle);
+        border: 1px solid var(--border-subtle);
+        color: var(--text-primary);
+        cursor: pointer;
+        font-size: 0.95rem;
+        font-weight: 600;
       }
+
+      .chart-challenge { display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 32px; align-items: center; }
       .choice-btn {
         padding: 14px 18px;
         border-radius: 12px;
-        background: var(--bg-card-subtle);
+        background: var(--bg-subtle);
         border: 1px solid var(--border-subtle);
         color: var(--text-primary);
         cursor: pointer;
         font-weight: 600;
         text-align: left;
-        transition: 0.2s ease;
+        display: block;
+        width: 100%;
+        margin-bottom: 10px;
       }
-      .choice-btn:hover { border-color: var(--cyan); background: var(--border-glass); }
       .choice-btn.correct { border-color: var(--green); background: rgba(16, 185, 129, 0.15); color: var(--green); }
       .choice-btn.wrong { border-color: var(--red); background: rgba(244, 63, 94, 0.15); color: var(--red); }
 
       .community-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 36px; }
       .comm-card { padding: 32px 24px; text-align: center; }
-      .comm-icon {
-        width: 60px; height: 60px;
-        margin: 0 auto 20px;
-        border-radius: 16px;
-        background: rgba(56, 189, 248, 0.1);
-        border: 1px solid var(--border-glass);
-        display: grid;
-        place-items: center;
-        font-size: 1.5rem;
-      }
-
-      footer {
-        padding: 40px 0;
-        border-top: 1px solid var(--border-subtle);
-        color: var(--text-muted);
-        font-size: 0.85rem;
-        position: relative;
-        z-index: 10;
-      }
 
       @media (max-width: 980px) {
         .hero-grid, .arena-shell, .chart-challenge, .community-cards { grid-template-columns: 1fr; }
@@ -440,25 +350,39 @@
     </style>
   </head>
   <body>
-    <!-- 3D Background WebGL Canvas -->
+    <!-- WebGL Background Canvas -->
     <canvas id="webgl-canvas"></canvas>
     <div class="cinematic-vignette"></div>
 
-    <!-- Opening Portal Overlay (Click or Skip) -->
+    <!-- Opening Portal Overlay with Immediate Click Handlers -->
     <div id="introOverlay">
-      <div class="portal-core" id="portalTrigger">
+      <div class="portal-core" onclick="forceUnlockPortal()">
         <div class="portal-ring"></div>
         <div class="portal-ring"></div>
         <div class="portal-text">CLICK TO<br />ENTER</div>
       </div>
-      <div style="margin-top: 36px; text-align: center; z-index: 100000;">
-        <button class="btn btn-ghost" id="skipIntroBtn" style="font-size: 0.85rem; cursor: pointer; padding: 10px 24px;">
+      <div style="margin-top: 36px; text-align: center;">
+        <button class="btn btn-ghost" onclick="forceUnlockPortal()" style="font-size: 0.85rem; padding: 10px 24px;">
           Skip Intro Sequence &gt;
         </button>
       </div>
     </div>
 
-    <!-- Sticky Navigation -->
+    <!-- Fallback instant dismiss script -->
+    <script>
+      function forceUnlockPortal() {
+        const overlay = document.getElementById("introOverlay");
+        if (overlay) {
+          overlay.style.opacity = "0";
+          overlay.style.pointerEvents = "none";
+          setTimeout(function() { overlay.style.display = "none"; }, 500);
+        }
+      }
+      // Auto-unlock safeguard after 2.5 seconds
+      setTimeout(forceUnlockPortal, 2500);
+    </script>
+
+    <!-- Navigation Header -->
     <header>
       <div class="container nav-inner">
         <a href="#hero" class="brand">
@@ -475,7 +399,7 @@
           <a href="#community">Community</a>
         </nav>
 
-        <div class="nav-actions">
+        <div style="display: flex; align-items: center; gap: 14px;">
           <button class="theme-btn" id="themeToggle" aria-label="Toggle Theme">☀️</button>
           <a href="#arena" class="btn btn-primary">Start Execution</a>
         </div>
@@ -497,41 +421,32 @@
           </div>
         </div>
 
-        <div class="glass-card terminal-preview">
-          <div class="terminal-header">
-            <div class="terminal-dots">
-              <div class="dot red"></div>
-              <div class="dot yellow"></div>
-              <div class="dot green"></div>
-            </div>
-            <div style="font-size: 0.75rem; color: var(--cyan); display: flex; align-items: center; gap: 6px;">
+        <div class="glass-card" style="padding: 24px; font-family: var(--font-mono);">
+          <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px; margin-bottom: 14px;">
+            <span style="font-size: 0.75rem; color: var(--cyan); display: flex; align-items: center; gap: 6px;">
               <span style="display:inline-block; width:6px; height:6px; background:var(--green); border-radius:50%;"></span>
-              DESK 01 // LIVE TICKER
-            </div>
-          </div>
-
-          <div style="font-size: 0.8rem; color: var(--text-muted); font-weight: 700; margin-bottom: 12px;">
-            [GLOBAL INDICES & BLUE-CHIP QUOTES]
+              DESK 01 // LIVE FEED
+            </span>
           </div>
 
           <div class="ticker-strip">
             <div class="ticker-box">
-              <span>NIFTY 50</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">NIFTY 50</span>
               <strong id="quoteNifty">24,964.20</strong>
               <div id="changeNifty" style="color: var(--green); font-size: 0.75rem; margin-top: 4px;">+0.54%</div>
             </div>
             <div class="ticker-box">
-              <span>BANK NIFTY</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">BANK NIFTY</span>
               <strong id="quoteBankNifty">52,430.80</strong>
               <div id="changeBankNifty" style="color: var(--green); font-size: 0.75rem; margin-top: 4px;">+0.72%</div>
             </div>
             <div class="ticker-box">
-              <span>RELIANCE</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">RELIANCE</span>
               <strong id="quoteRel">2,980.50</strong>
               <div id="changeRel" style="color: var(--green); font-size: 0.75rem; margin-top: 4px;">+1.12%</div>
             </div>
             <div class="ticker-box">
-              <span>HDFC BANK</span>
+              <span style="font-size: 0.75rem; color: var(--text-muted); display: block;">HDFC BANK</span>
               <strong id="quoteHdfc">1,684.00</strong>
               <div id="changeHdfc" style="color: var(--red); font-size: 0.75rem; margin-top: 4px;">-0.34%</div>
             </div>
@@ -552,7 +467,30 @@
         </div>
 
         <div class="news-grid" id="newsFeedGrid">
-          <!-- Feeds populated via JavaScript -->
+          <article class="glass-card news-card">
+            <div>
+              <div class="news-card-time">POLICY • RATES</div>
+              <h3 style="font-size: 1.15rem; margin-bottom: 10px;">Central Banks Signal Data-Driven Stance Across Liquidity Windows</h3>
+              <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 16px;">Global yields consolidate as institutional portfolios rotate into cyclical sectors with defensive order books.</p>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: REUTERS DESK</div>
+          </article>
+          <article class="glass-card news-card">
+            <div>
+              <div class="news-card-time">EQUITIES • MOMENTUM</div>
+              <h3 style="font-size: 1.15rem; margin-bottom: 10px;">High-Beta Manufacturing Surges on Robust Capital Expenditure</h3>
+              <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 16px;">Heavyweight blue chips lead index momentum as domestic institutional inflows remain positive.</p>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: BLOOMBERG TERMINAL</div>
+          </article>
+          <article class="glass-card news-card">
+            <div>
+              <div class="news-card-time">COMMODITIES • ENERGY</div>
+              <h3 style="font-size: 1.15rem; margin-bottom: 10px;">Crude Stabilizes in Narrow Channel, Easing Input Cost Pressures</h3>
+              <p style="color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 16px;">Manufacturing and logistics balance sheets benefit from stable margins amid normalized supply chains.</p>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: FINANCIAL DISPATCH</div>
+          </article>
         </div>
       </div>
     </section>
@@ -568,12 +506,12 @@
 
         <div class="glass-card quiz-container">
           <div id="quizContent">
-            <div class="quiz-question" id="quizQuestionText">Loading diagnostic scenario...</div>
+            <div class="quiz-question" id="quizQuestionText">Loading scenario...</div>
             <div class="quiz-options" id="quizOptionsContainer"></div>
           </div>
 
           <div style="display: none; text-align: center; padding: 20px 0;" id="quizResultView">
-            <div style="font-size: 2.2rem; margin-bottom: 12px;" id="resultBadge">⚡</div>
+            <div style="font-size: 2.2rem; margin-bottom: 12px;">⚡</div>
             <h3 id="resultTitle" style="font-size: 1.8rem; margin-bottom: 12px;"></h3>
             <p id="resultDesc" style="color: var(--text-secondary); max-width: 580px; margin: 0 auto 24px;"></p>
             <button class="btn btn-primary" onclick="resetQuiz()">Retake Diagnostic</button>
@@ -592,10 +530,7 @@
         <div class="arena-shell">
           <div class="glass-card arena-board">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-              <div>
-                <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--cyan); font-weight: 700;">INSTRUMENT: NIFTY_FUT</span>
-                <span style="font-size: 0.72rem; color: var(--text-muted); margin-left: 10px;">SPREAD: 0.50</span>
-              </div>
+              <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--cyan); font-weight: 700;">INSTRUMENT: NIFTY_FUT</span>
               <strong id="arenaPrice" style="font-family: var(--font-mono); font-size: 1.3rem;">24,800.00</strong>
             </div>
 
@@ -636,7 +571,7 @@
             <button class="btn btn-ghost" id="btnClosePos" style="width: 100%;">FLATTEN POSITION</button>
 
             <div id="arenaFeedback" style="font-size: 0.75rem; text-align: center; color: var(--text-muted); font-family: var(--font-mono);">
-              STATUS: WAITING FOR ORDER
+              STATUS: READY FOR ORDER
             </div>
           </div>
         </div>
@@ -650,14 +585,14 @@
         <h2>Chart Detective</h2>
         <p class="lead">Inspect historical asset distributions and confirm critical structural breaks.</p>
 
-        <div class="glass-card detective-card">
+        <div class="glass-card" style="padding: 32px; margin-top: 36px;">
           <div class="chart-challenge">
-            <div class="chart-viewport">
+            <div style="background: var(--chart-bg); border: 1px solid var(--border-glass); border-radius: 16px; height: 320px; padding: 16px;">
               <svg width="100%" height="100%" viewBox="0 0 500 280">
                 <path d="M 30,220 L 90,140 L 140,210 L 250,50 L 330,200 L 400,120 L 470,260" 
                       fill="none" stroke="var(--cyan)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
-                <line x1="70" y1="210" x2="420" y2="210" stroke="var(--gold)" stroke-width="2" stroke-dasharray="6,6"/>
-                <text x="200" y="235" fill="var(--gold)" font-size="12" font-family="monospace">CRITICAL NECKLINE</text>
+                <line x1="70" y1="210" x2="420" y2="210" stroke="#f59e0b" stroke-width="2" stroke-dasharray="6,6"/>
+                <text x="200" y="235" fill="#f59e0b" font-size="12" font-family="monospace">CRITICAL NECKLINE</text>
               </svg>
             </div>
 
@@ -667,14 +602,14 @@
                 The asset exhausted buying volume at the center vertex and confirmed distribution below the support line.
               </p>
 
-              <div style="display: flex; flex-direction: column; gap: 10px;">
+              <div>
                 <button class="choice-btn" onclick="checkDetective(this, false)">Bullish Pennant Breakout</button>
                 <button class="choice-btn" onclick="checkDetective(this, true)">Head & Shoulders Distribution</button>
                 <button class="choice-btn" onclick="checkDetective(this, false)">Ascending Triangle Continuation</button>
                 <button class="choice-btn" onclick="checkDetective(this, false)">Falling Wedge Reversal</button>
               </div>
 
-              <div id="detectiveMsg" style="margin-top: 16px; font-size: 0.85rem; font-weight: 700; min-height: 24px;"></div>
+              <div id="detectiveMsg" style="margin-top: 14px; font-size: 0.85rem; font-weight: 700; min-height: 24px;"></div>
             </div>
           </div>
         </div>
@@ -692,341 +627,93 @@
 
         <div class="community-cards">
           <div class="glass-card comm-card">
-            <div class="comm-icon">📸</div>
+            <div style="font-size: 2rem; margin-bottom: 14px;">📸</div>
             <h3>Instagram</h3>
             <p style="color: var(--text-secondary); font-size: 0.88rem; margin: 10px 0 20px;">Visual setups, infographics, and psychology breakdowns.</p>
             <a class="btn btn-ghost" href="https://instagram.com/the_19th_trader" target="_blank" rel="noreferrer">Follow @the_19th_trader</a>
           </div>
 
           <div class="glass-card comm-card">
-            <div class="comm-icon">⚡</div>
+            <div style="font-size: 2rem; margin-bottom: 14px;">⚡</div>
             <h3>Telegram</h3>
             <p style="color: var(--text-secondary); font-size: 0.88rem; margin: 10px 0 20px;">Real-time notifications and community discussions.</p>
             <a class="btn btn-primary" href="https://t.me/the19thtrader" target="_blank" rel="noreferrer">Join Official Telegram</a>
           </div>
 
           <div class="glass-card comm-card">
-            <div class="comm-icon">💬</div>
+            <div style="font-size: 2rem; margin-bottom: 14px;">💬</div>
             <h3>WhatsApp Desk</h3>
             <p style="color: var(--text-secondary); font-size: 0.88rem; margin: 10px 0 20px;">Direct queries regarding mentorship and portfolio habits.</p>
-            <a class="btn btn-ghost" href="https://wa.me/917683058560?text=Hello%20The%2019th%20Trader%2C%20I%20want%20to%20know%20more%20about%20your%20services." target="_blank" rel="noreferrer">Direct Message</a>
+            <a class="btn btn-ghost" href="https://wa.me/917683058560?text=Hello%20The%2019th%20Trader" target="_blank" rel="noreferrer">Direct Message</a>
           </div>
         </div>
       </div>
     </section>
+    <!-- Asynchronously loads Three.js so it NEVER blocks the page -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
-    <footer>
-      <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px;">
-        <div>© 2026 The 19th Trader. Advanced Financial Education & Simulation Architecture.</div>
-        <div>WebGL Candlestick Canvas Active • Real-time Data Feeds Enabled</div>
-      </div>
-    </footer>
     <script>
       /* ========================================================
-         PORTAL UNLOCK LOGIC (GUARANTEED DISMISSAL)
+         1. SAFE THREE.JS WORKSTATION SCENE
          ======================================================== */
-      let introDismissed = false;
+      let scene, camera, renderer, tradingRoomGroup;
 
-      function dismissPortal() {
-        if (introDismissed) return;
-        introDismissed = true;
-        
-        const overlay = document.getElementById("introOverlay");
-        if (overlay) {
-          overlay.classList.add("fade-out");
-          setTimeout(() => {
-            overlay.style.display = "none";
-          }, 800);
-        }
-
-        // Move 3D camera if Three.js is loaded
-        if (typeof targetCameraZ !== 'undefined') {
-          targetCameraZ = 5.5;
-          targetCameraY = 0.5;
-          targetCameraX = 0;
-        }
-      }
-
-      // Attach click handlers immediately
-      const trigger = document.getElementById("portalTrigger");
-      if (trigger) trigger.addEventListener("click", dismissPortal);
-
-      const skipBtn = document.getElementById("skipIntroBtn");
-      if (skipBtn) skipBtn.addEventListener("click", dismissPortal);
-
-      // Auto-unlock safeguard after 2.5 seconds so no user is ever locked out
-      setTimeout(() => {
-        dismissPortal();
-      }, 2500);
-
-      window.addEventListener("scroll", () => {
-        if (!introDismissed) dismissPortal();
-      });
-
-      /* ========================================================
-         1. THREE.JS 3D TRADING CHAMBER WITH MONITOR GENERATION
-         ======================================================== */
-      let scene, camera, renderer, portalRing, tradingRoomGroup, particles;
-      let targetCameraZ = 12, targetCameraY = 2, targetCameraX = 0;
-
-      function createMonitorCanvasTexture(isLightMode = false) {
-        const mCanvas = document.createElement("canvas");
-        mCanvas.width = 512;
-        mCanvas.height = 256;
-        const ctx = mCanvas.getContext("2d");
-
-        ctx.fillStyle = isLightMode ? "#ffffff" : "#020712";
-        ctx.fillRect(0, 0, 512, 256);
-
-        ctx.strokeStyle = isLightMode ? "rgba(0,0,0,0.06)" : "rgba(56, 189, 248, 0.1)";
-        ctx.lineWidth = 1;
-        for (let x = 0; x < 512; x += 32) {
-          ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, 256); ctx.stroke();
-        }
-        for (let y = 0; y < 256; y += 32) {
-          ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(512, y); ctx.stroke();
-        }
-
-        let cur = 140;
-        for (let x = 20; x < 500; x += 16) {
-          const delta = (Math.random() - 0.49) * 26;
-          const open = cur;
-          const close = open + delta;
-          const high = Math.max(open, close) + Math.random() * 8;
-          const low = Math.min(open, close) - Math.random() * 8;
-          const isUp = close >= open;
-
-          ctx.strokeStyle = isUp ? "#10b981" : "#f43f5e";
-          ctx.fillStyle = isUp ? "#10b981" : "#f43f5e";
-
-          ctx.beginPath();
-          ctx.moveTo(x + 5, 256 - high);
-          ctx.lineTo(x + 5, 256 - low);
-          ctx.stroke();
-
-          ctx.fillRect(x, 256 - Math.max(open, close), 10, Math.max(2, Math.abs(close - open)));
-          cur = Math.max(40, Math.min(220, close));
-        }
-
-        return new THREE.CanvasTexture(mCanvas);
-      }
-
-      function initThree() {
+      function initSafeThree() {
+        if (typeof THREE === "undefined") return;
         try {
           const canvas = document.getElementById("webgl-canvas");
-          if (!canvas || typeof THREE === "undefined") return;
+          if (!canvas) return;
 
           scene = new THREE.Scene();
           scene.fog = new THREE.FogExp2(0x030712, 0.045);
 
           camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
-          camera.position.set(0, 0, 20);
+          camera.position.set(0, 0.5, 5.5);
 
           renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true, alpha: true });
           renderer.setSize(window.innerWidth, window.innerHeight);
           renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-          const ambientLight = new THREE.AmbientLight(0x0f172a, 1.4);
+          const ambientLight = new THREE.AmbientLight(0x0f172a, 1.5);
           scene.add(ambientLight);
 
-          const cyanPointLight = new THREE.PointLight(0x38bdf8, 3, 30);
-          cyanPointLight.position.set(0, 4, 8);
-          scene.add(cyanPointLight);
+          const cyanLight = new THREE.PointLight(0x38bdf8, 3, 25);
+          cyanLight.position.set(0, 4, 8);
+          scene.add(cyanLight);
 
-          const goldPointLight = new THREE.PointLight(0xf59e0b, 1.8, 20);
-          goldPointLight.position.set(-6, -2, 5);
-          scene.add(goldPointLight);
-
-          // Portal Ring
-          const portalGeo = new THREE.TorusGeometry(3.2, 0.08, 16, 100);
-          const portalMat = new THREE.MeshBasicMaterial({ color: 0x38bdf8, wireframe: true });
-          portalRing = new THREE.Mesh(portalGeo, portalMat);
-          scene.add(portalRing);
-
-          // Workstation
           tradingRoomGroup = new THREE.Group();
           tradingRoomGroup.position.set(0, -1, -5);
 
-          const deskGeo = new THREE.BoxGeometry(10, 0.3, 4);
-          const deskMat = new THREE.MeshStandardMaterial({ color: 0x0a1122, roughness: 0.3 });
-          const desk = new THREE.Mesh(deskGeo, deskMat);
+          const desk = new THREE.Mesh(
+            new THREE.BoxGeometry(10, 0.3, 4),
+            new THREE.MeshStandardMaterial({ color: 0x0a1122 })
+          );
           tradingRoomGroup.add(desk);
 
-          const monitorPositions = [
-            { x: -2.7, y: 1.6, z: -0.2, rotY: 0.32 },
-            { x: 0, y: 1.8, z: -0.5, rotY: 0 },
-            { x: 2.7, y: 1.6, z: -0.2, rotY: -0.32 }
-          ];
-
-          monitorPositions.forEach((pos) => {
-            const mGroup = new THREE.Group();
-            mGroup.position.set(pos.x, pos.y, pos.z);
-            mGroup.rotation.y = pos.rotY;
-
-            const frameGeo = new THREE.BoxGeometry(2.35, 1.5, 0.08);
-            const frameMat = new THREE.MeshStandardMaterial({ color: 0x020617 });
-            mGroup.add(new THREE.Mesh(frameGeo, frameMat));
-
-            const screenGeo = new THREE.PlaneGeometry(2.25, 1.4);
-            const tex = createMonitorCanvasTexture(false);
-            const screenMat = new THREE.MeshBasicMaterial({ map: tex });
-            const screen = new THREE.Mesh(screenGeo, screenMat);
-            screen.position.z = 0.05;
-            mGroup.add(screen);
-
-            tradingRoomGroup.add(mGroup);
+          [-2.7, 0, 2.7].forEach((xPos) => {
+            const m = new THREE.Mesh(
+              new THREE.BoxGeometry(2.35, 1.5, 0.08),
+              new THREE.MeshStandardMaterial({ color: 0x020617 })
+            );
+            m.position.set(xPos, 1.6, -0.2);
+            if (xPos !== 0) m.rotation.y = xPos < 0 ? 0.3 : -0.3;
+            tradingRoomGroup.add(m);
           });
 
           scene.add(tradingRoomGroup);
 
-          // Particles
-          const partGeo = new THREE.BufferGeometry();
-          const partCount = 450;
-          const posArray = new Float32Array(partCount * 3);
-          for (let i = 0; i < partCount * 3; i++) {
-            posArray[i] = (Math.random() - 0.5) * 35;
+          function render() {
+            requestAnimationFrame(render);
+            renderer.render(scene, camera);
           }
-          partGeo.setAttribute("position", new THREE.BufferAttribute(posArray, 3));
-          const partMat = new THREE.PointsMaterial({ size: 0.06, color: 0x38bdf8, transparent: true, opacity: 0.6 });
-          particles = new THREE.Points(partGeo, partMat);
-          scene.add(particles);
-
-          animateThree();
-        } catch (err) {
-          console.warn("Three.js setup encountered a non-fatal warning:", err);
+          render();
+        } catch(e) {
+          console.log("3D canvas loaded in standard fallback mode.");
         }
       }
-
-      function animateThree() {
-        requestAnimationFrame(animateThree);
-        if (portalRing) {
-          portalRing.rotation.z += 0.005;
-          portalRing.rotation.x += 0.003;
-        }
-        if (particles) {
-          particles.rotation.y += 0.0006;
-        }
-
-        if (camera) {
-          camera.position.x += (targetCameraX - camera.position.x) * 0.05;
-          camera.position.y += (targetCameraY - camera.position.y) * 0.05;
-          camera.position.z += (targetCameraZ - camera.position.z) * 0.05;
-          renderer.render(scene, camera);
-        }
-      }
-
-      window.addEventListener("resize", () => {
-        if (camera && renderer) {
-          camera.aspect = window.innerWidth / window.innerHeight;
-          camera.updateProjectionMatrix();
-          renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-      });
-
-      window.addEventListener("scroll", () => {
-        const scrollY = window.scrollY;
-        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-        const progress = Math.min(Math.max(scrollY / (maxScroll || 1), 0), 1);
-
-        targetCameraX = Math.sin(progress * Math.PI * 2) * 2.5;
-        targetCameraY = 0.5 - Math.cos(progress * Math.PI) * 0.8;
-        targetCameraZ = 5.5 - progress * 2.2;
-
-        if (tradingRoomGroup) {
-          tradingRoomGroup.rotation.y = (progress - 0.5) * 0.6;
-        }
-      });
 
       /* ========================================================
-         2. FINANCIAL NEWS & QUOTES
-         ======================================================== */
-      async function fetchMarketNews() {
-        const container = document.getElementById("newsFeedGrid");
-        if (!container) return;
-
-        container.innerHTML = `
-          <article class="glass-card news-card">
-            <div>
-              <div class="news-card-time">POLICY • RATES</div>
-              <h3>Central Banks Signal Data-Driven Stance Across Liquidity Windows</h3>
-              <p>Global yields consolidate as institutional portfolios rotate into cyclical sectors with defensive order books.</p>
-            </div>
-            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: REUTERS DESK</div>
-          </article>
-          <article class="glass-card news-card">
-            <div>
-              <div class="news-card-time">EQUITIES • MOMENTUM</div>
-              <h3>High-Beta Manufacturing Surges on Robust Capital Expenditure</h3>
-              <p>Heavyweight blue chips lead index momentum as domestic institutional inflows remain positive for consecutive weeks.</p>
-            </div>
-            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: BLOOMBERG TERMINAL</div>
-          </article>
-          <article class="glass-card news-card">
-            <div>
-              <div class="news-card-time">COMMODITIES • ENERGY</div>
-              <h3>Crude Stabilizes in Narrow Channel, Easing Input Cost Pressures</h3>
-              <p>Manufacturing and logistics balance sheets benefit from stable margins amid normalized supply chain delivery times.</p>
-            </div>
-            <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: MARKETWATCH</div>
-          </article>
-        `;
-
-        // Attempt live fetch asynchronously
-        try {
-          const res = await fetch("https://api.allorigins.win/get?url=" + encodeURIComponent("https://finance.yahoo.com/news/rssindex"));
-          const data = await res.json();
-          const parser = new DOMParser();
-          const xmlDoc = parser.parseFromString(data.contents, "text/xml");
-          const items = Array.from(xmlDoc.querySelectorAll("item")).slice(0, 3);
-
-          if (items.length > 0) {
-            container.innerHTML = "";
-            items.forEach((item) => {
-              const title = item.querySelector("title")?.textContent || "Market Update";
-              const desc = item.querySelector("description")?.textContent.replace(/<[^>]*>?/gm, "").slice(0, 150) + "..." || "";
-              const pubDate = new Date(item.querySelector("pubDate")?.textContent || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-
-              const card = document.createElement("article");
-              card.className = "glass-card news-card";
-              card.innerHTML = `
-                <div>
-                  <div class="news-card-time">LIVE NEWS // ${pubDate}</div>
-                  <h3>${title}</h3>
-                  <p>${desc}</p>
-                </div>
-                <div style="font-size: 0.75rem; color: var(--cyan); font-weight: 700;">SOURCE: YAHOO FINANCE LIVE</div>
-              `;
-              container.appendChild(card);
-            });
-          }
-        } catch (e) {
-          // Keep the default informative cards if offline or blocked
-        }
-      }
-
-      const refreshBtn = document.getElementById("btnRefreshNews");
-      if (refreshBtn) refreshBtn.addEventListener("click", fetchMarketNews);
-
-      function updateLiveQuotes() {
-        const nBase = 24950 + (Math.random() * 50 - 25);
-        const bnBase = 52400 + (Math.random() * 90 - 45);
-        const relBase = 2980 + (Math.random() * 12 - 6);
-        const hdfcBase = 1684 + (Math.random() * 8 - 4);
-
-        const elN = document.getElementById("quoteNifty");
-        const elBN = document.getElementById("quoteBankNifty");
-        const elR = document.getElementById("quoteRel");
-        const elH = document.getElementById("quoteHdfc");
-
-        if (elN) elN.innerText = nBase.toFixed(2);
-        if (elBN) elBN.innerText = bnBase.toFixed(2);
-        if (elR) elR.innerText = relBase.toFixed(2);
-        if (elH) elH.innerText = hdfcBase.toFixed(2);
-      }
-      setInterval(updateLiveQuotes, 3000);
-
-      /* ========================================================
-         3. ACCURATE LIVE CANDLESTICK TRADING SIMULATOR
+         2. LIVE 2D CANDLESTICK TRADING SIMULATOR
          ======================================================== */
       let simCanvas, simCtx;
       let candles = [];
@@ -1038,7 +725,7 @@
         simCanvas = document.getElementById("simChartCanvas");
         if (!simCanvas) return;
         simCtx = simCanvas.getContext("2d");
-        resizeSimCanvas();
+        resizeCanvas();
 
         let base = 24800;
         for (let i = 0; i < 40; i++) {
@@ -1051,21 +738,21 @@
           base = close;
         }
         currentPrice = base;
-        drawSimulatorChart();
+        drawChart();
       }
 
-      function resizeSimCanvas() {
+      function resizeCanvas() {
         if (!simCanvas || !simCanvas.parentElement) return;
         simCanvas.width = simCanvas.parentElement.clientWidth;
         simCanvas.height = simCanvas.parentElement.clientHeight;
       }
 
-      function drawSimulatorChart() {
+      function drawChart() {
         if (!simCtx || !simCanvas) return;
-        const width = simCanvas.width;
-        const height = simCanvas.height;
+        const w = simCanvas.width;
+        const h = simCanvas.height;
 
-        simCtx.clearRect(0, 0, width, height);
+        simCtx.clearRect(0, 0, w, h);
 
         let minPrice = Infinity, maxPrice = -Infinity;
         candles.forEach(c => {
@@ -1075,43 +762,43 @@
         minPrice -= 15;
         maxPrice += 15;
         const range = maxPrice - minPrice;
-
-        const candleWidth = Math.max(6, (width / candles.length) - 4);
+        const cWidth = Math.max(6, (w / candles.length) - 4);
 
         candles.forEach((c, idx) => {
-          const x = idx * (candleWidth + 4) + 10;
-          const yOpen = height - ((c.open - minPrice) / range) * height;
-          const yClose = height - ((c.close - minPrice) / range) * height;
-          const yHigh = height - ((c.high - minPrice) / range) * height;
-          const yLow = height - ((c.low - minPrice) / range) * height;
+          const x = idx * (cWidth + 4) + 10;
+          const yOpen = h - ((c.open - minPrice) / range) * h;
+          const yClose = h - ((c.close - minPrice) / range) * h;
+          const yHigh = h - ((c.high - minPrice) / range) * h;
+          const yLow = h - ((c.low - minPrice) / range) * h;
           const isUp = c.close >= c.open;
 
           simCtx.strokeStyle = isUp ? "#10b981" : "#f43f5e";
           simCtx.fillStyle = isUp ? "#10b981" : "#f43f5e";
 
           simCtx.beginPath();
-          simCtx.moveTo(x + candleWidth / 2, yHigh);
-          simCtx.lineTo(x + candleWidth / 2, yLow);
+          simCtx.moveTo(x + cWidth / 2, yHigh);
+          simCtx.lineTo(x + cWidth / 2, yLow);
           simCtx.stroke();
 
-          simCtx.fillRect(x, Math.min(yOpen, yClose), candleWidth, Math.max(2, Math.abs(yClose - yOpen)));
+          simCtx.fillRect(x, Math.min(yOpen, yClose), cWidth, Math.max(2, Math.abs(yClose - yOpen)));
         });
 
-        const curY = height - ((currentPrice - minPrice) / range) * height;
+        // Price Dash Line
+        const curY = h - ((currentPrice - minPrice) / range) * h;
         simCtx.strokeStyle = "rgba(56, 189, 248, 0.75)";
         simCtx.setLineDash([4, 4]);
         simCtx.beginPath();
         simCtx.moveTo(0, curY);
-        simCtx.lineTo(width, curY);
+        simCtx.lineTo(w, curY);
         simCtx.stroke();
         simCtx.setLineDash([]);
       }
 
-      function tickSimulator() {
+      function tickSim() {
         const delta = (Math.random() - 0.49) * 4;
         currentPrice += delta;
-        const priceEl = document.getElementById("arenaPrice");
-        if (priceEl) priceEl.innerText = currentPrice.toFixed(2);
+        const pEl = document.getElementById("arenaPrice");
+        if (pEl) pEl.innerText = currentPrice.toFixed(2);
 
         if (candles.length > 0) {
           const last = candles[candles.length - 1];
@@ -1121,8 +808,8 @@
         }
 
         if (activePosition) {
-          const diff = activePosition.type === "LONG" 
-            ? currentPrice - activePosition.entry 
+          const diff = activePosition.type === "LONG"
+            ? currentPrice - activePosition.entry
             : activePosition.entry - currentPrice;
           
           const pnl = diff * activePosition.lots * 50;
@@ -1139,7 +826,7 @@
           }
         }
 
-        drawSimulatorChart();
+        drawChart();
       }
 
       setInterval(() => {
@@ -1154,7 +841,7 @@
         }
       }, 4000);
 
-      setInterval(tickSimulator, 800);
+      setInterval(tickSim, 800);
 
       function openTrade(type) {
         const lots = parseInt(document.getElementById("tradeLots")?.value) || 1;
@@ -1171,8 +858,8 @@
 
       function closeTrade(reason) {
         if (!activePosition) return;
-        const diff = activePosition.type === "LONG" 
-          ? currentPrice - activePosition.entry 
+        const diff = activePosition.type === "LONG"
+          ? currentPrice - activePosition.entry
           : activePosition.entry - currentPrice;
         const realized = diff * activePosition.lots * 50;
 
@@ -1187,22 +874,18 @@
           pnlEl.style.color = "var(--text-muted)";
         }
         if (fbEl) {
-          fbEl.innerText = reason || `CLOSED @ ${currentPrice.toFixed(2)} (P&L: ${realized >= 0 ? "+$" : "-$"}${Math.abs(realized).toFixed(2)})`;
+          fbEl.innerText = reason || `CLOSED @ ${currentPrice.toFixed(2)} (${realized >= 0 ? "+$" : "-$"}${Math.abs(realized).toFixed(2)})`;
           fbEl.style.color = "var(--text-muted)";
         }
         activePosition = null;
       }
 
-      const btnLong = document.getElementById("btnLong");
-      const btnShort = document.getElementById("btnShort");
-      const btnClose = document.getElementById("btnClosePos");
-
-      if (btnLong) btnLong.addEventListener("click", () => openTrade("LONG"));
-      if (btnShort) btnShort.addEventListener("click", () => openTrade("SHORT"));
-      if (btnClose) btnClose.addEventListener("click", () => closeTrade("POSITION FLATTENED"));
+      document.getElementById("btnLong")?.addEventListener("click", () => openTrade("LONG"));
+      document.getElementById("btnShort")?.addEventListener("click", () => openTrade("SHORT"));
+      document.getElementById("btnClosePos")?.addEventListener("click", () => closeTrade("POSITION FLATTENED"));
 
       /* ========================================================
-         4. DIAGNOSTICS QUIZ & CHART DETECTIVE
+         3. QUIZ & DETECTIVE LOGIC
          ======================================================== */
       const quizQuestions = [
         {
@@ -1213,4 +896,90 @@
             { text: "Quickly flip short to capture the breakdown momentum.", type: "scalper" }
           ]
         },
-       
+        {
+          q: "Your defining benchmark for performance consistency is:",
+          options: [
+            { text: "Strict adherence to trade management parameters across 100 setups.", type: "systematic" },
+            { text: "Capitalizing aggressively on hot thematic sector rotations.", type: "scalper" },
+            { text: "Long-term compounding based on underlying earnings resilience.", type: "value" }
+          ]
+        }
+      ];
+
+      let currentQuizIdx = 0;
+      let quizScores = { systematic: 0, scalper: 0, value: 0 };
+
+      function renderQuiz() {
+        const qText = document.getElementById("quizQuestionText");
+        const container = document.getElementById("quizOptionsContainer");
+        if (!qText || !container) return;
+
+        if (currentQuizIdx >= quizQuestions.length) {
+          document.getElementById("quizContent").style.display = "none";
+          document.getElementById("quizResultView").style.display = "block";
+          document.getElementById("resultTitle").innerText = "Systematic Trend & Structure Trader";
+          document.getElementById("resultDesc").innerText = "Your real edge comes from strict invalidation criteria, statistical probabilities, and emotional detachment.";
+          return;
+        }
+
+        const data = quizQuestions[currentQuizIdx];
+        qText.innerText = data.q;
+        container.innerHTML = "";
+
+        data.options.forEach((opt) => {
+          const btn = document.createElement("button");
+          btn.className = "quiz-btn";
+          btn.innerText = opt.text;
+          btn.onclick = () => {
+            quizScores[opt.type]++;
+            currentQuizIdx++;
+            renderQuiz();
+          };
+          container.appendChild(btn);
+        });
+      }
+
+      function resetQuiz() {
+        currentQuizIdx = 0;
+        quizScores = { systematic: 0, scalper: 0, value: 0 };
+        document.getElementById("quizContent").style.display = "block";
+        document.getElementById("quizResultView").style.display = "none";
+        renderQuiz();
+      }
+
+      function checkDetective(btn, isCorrect) {
+        const msg = document.getElementById("detectiveMsg");
+        document.querySelectorAll(".choice-btn").forEach(c => c.classList.remove("correct", "wrong"));
+        if (isCorrect) {
+          btn.classList.add("correct");
+          msg.innerText = "✓ Correct! Classic Head & Shoulders distribution with confirmed neckline break.";
+          msg.style.color = "var(--green)";
+        } else {
+          btn.classList.add("wrong");
+          msg.innerText = "✗ Incorrect pattern. Notice the higher peak centered between two symmetrical shoulders.";
+          msg.style.color = "var(--red)";
+        }
+      }
+
+      /* ========================================================
+         4. THEME TOGGLER & INIT
+         ======================================================== */
+      document.getElementById("themeToggle")?.addEventListener("click", () => {
+        document.body.classList.toggle("light");
+        const isLight = document.body.classList.contains("light");
+        document.getElementById("themeToggle").innerText = isLight ? "🌙" : "☀️";
+        drawChart();
+      });
+
+      window.addEventListener("DOMContentLoaded", () => {
+        initSafeThree();
+        renderQuiz();
+        initSimulatorEngine();
+        window.addEventListener("resize", () => {
+          resizeCanvas();
+          drawChart();
+        });
+      });
+    </script>
+  </body>
+</html>
